@@ -1,7 +1,7 @@
 import React,{useContext, useEffect} from 'react'
 import Layout from '../Layout/Layout'
-import PubLugar from '../Pub_Lugar/pubLugar'
 import { LoginContext } from '../../context/Login'
+import FeedPlaces from '../FeedPlaces/FeedPlaces'
 
 const PaginaPrincipal = () => {
   const {logedUser}=useContext(LoginContext);
@@ -13,7 +13,7 @@ const PaginaPrincipal = () => {
   
   <Layout>
       
-      <PubLugar/>
+      <FeedPlaces/>
     
   </Layout>
   

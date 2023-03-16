@@ -21,8 +21,8 @@ import { LoginContext } from '../../context/Login'
 
 const Perfil = (props) => {
   const [theUser, setTheUser] = useState({});
-  const [thePlaces,setThePlaces]=useState([]);
-  const [theEvents,setTheEvents]=useState([]);
+  const [thePlaces, setThePlaces] = useState([]);
+  const [theEvents, setTheEvents] = useState([]);
   const { pId } = useParams();
   const { image, setImage } = useContext(ImageContext);
   const { logedUser, users } = useContext(LoginContext);
@@ -34,6 +34,8 @@ const Perfil = (props) => {
     } else {
       searchTheUser(pId).then().catch((err) => console.log(err));
     }
+
+    chargeThePubs(pId).then().catch((err) => console.log(err))
   }, [])
 
   const searchTheUser = async (pId) => {
@@ -41,8 +43,9 @@ const Perfil = (props) => {
     setTheUser(response.data)
   }
 
-  const chargeThePubs=()=>{
-
+  const chargeThePubs = async (pId) => {
+    const response = await getAllPlacesForUser(pId);
+    setThePlaces(response.data)
   }
 
   const closeModal = () => {
@@ -123,26 +126,12 @@ const Perfil = (props) => {
       </div>
       {/* Publicaciones  */}
       <div className='grid grid-cols-3  gap-5 text-center mx-4 my-4' >
-        <div className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl '>
-          <figure><img className='card' src={Foto} alt="Shoes" /></figure>
-        </div>
-        <div className='col-span-3 sm:col-span-1 card  border-4 border-black cursor-pointer bg-base-100 shadow-xl'>
-          <figure><img className='card' src={Foto} alt="Shoes" /></figure>
-        </div>
-        <div className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl'>
-          <figure><img className='card' src={Foto} alt="Shoes" /></figure>
-        </div>
-      </div>
-      <div className='grid grid-cols-3  gap-5 text-center mx-4 my-4' >
-        <div className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl '>
-          <figure><img className='card' src={Foto} alt="Shoes" /></figure>
-        </div>
-        <div className='col-span-3 sm:col-span-1 card  border-4 border-black cursor-pointer bg-base-100 shadow-xl'>
-          <figure><img className='card' src={Foto} alt="Shoes" /></figure>
-        </div>
-        <div className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl'>
-          <figure><img className='card' src={Foto} alt="Shoes" /></figure>
-        </div>
+        {thePlaces.map((aPlace)=>(
+          <div key={aPlace.id} className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl '>
+            <figure><img className='card' src={aPlace.images[1].url} alt="Shoes" /></figure>
+          </div>
+        ))}
+
       </div>
 
       <Footer />
