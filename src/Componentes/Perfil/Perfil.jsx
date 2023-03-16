@@ -68,7 +68,7 @@ const Perfil = (props) => {
       {/* Put this part before </body> tag */}
       <input type="checkbox" id="my-modal-3" onChange={turnScrollIn} className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box relative" >
+        <div className="modal-box relative border-2 border-info" >
           <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <UsuarioInformacion closeModal={closeModal} />
         </div>
