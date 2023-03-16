@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from 'react'
 
 import Logo from "../../assets/img/CannotExpress.png"
 
-import { SlMap } from "react-icons/sl"
-import { FaPhotoVideo } from "react-icons/fa"
+import { BsFillCalendarPlusFill } from "react-icons/bs"
+import {BiMap} from "react-icons/bi"
 
 import { AiOutlineUser } from "react-icons/ai"
-import { RiTeamFill } from "react-icons/ri"
+import { RxBookmarkFilled } from "react-icons/rx"
 import { BsGearWideConnected } from "react-icons/bs"
 import { AiOutlineHome } from "react-icons/ai"
 
@@ -95,15 +95,15 @@ const Perfil = (props) => {
           </div>
           <div className='col-span-12  p-5 gap-1 sm:gap-x-20'>
             <div className='grid grid-cols-6 text-center gap-1 sm:gap-x-20 '>
-              <div className='col-span-2  justify-center  py-5'>
+              <div className='col-span-3  justify-center  py-5'>
                 <Link to="/principal">
                   <button className='cursor-pointer hover:scale-110'>
                     <AiOutlineHome className='logos' size={60} fill="white" />
                   </button>
                 </Link>
               </div>
-              <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><AiOutlineUser className='logos' size={60} fill="white" /></button></div>
-              <div className='col-span-2 justify-center py-5'><button className='cursor-pointer  hover:scale-110'>
+            
+              <div className='col-span-3 justify-center py-5'><button className='cursor-pointer  hover:scale-110'>
                 <label htmlFor="my-modal-3">
                   <BsGearWideConnected className='logos' size={60} fill="white" />
                 </label>
@@ -131,9 +131,9 @@ const Perfil = (props) => {
 
       <div className=''>
         <div className='grid grid-cols-6 text-center gap-1 sm:gap-x-20'>
-          <div className='col-span-2  justify-center  py-5'><button className='cursor-pointer hover:scale-110'><FaPhotoVideo className='logos' size={60} fill="white" /></button></div>
-          <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><SlMap className='logos' size={60} fill="white" /></button></div>
-          <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><RiTeamFill className='logos' size={60} fill="white" /></button></div>
+          <div className='col-span-2  justify-center  py-5'><button className='cursor-pointer hover:scale-110'><BiMap className='logos' size={60} fill="white" /></button></div>
+          <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><BsFillCalendarPlusFill className='logos' size={60} fill="white" /></button></div>
+          <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><RxBookmarkFilled className='logos' size={60} fill="white" /></button></div>
         </div>
       </div>
       {/* Publicaciones  */}
