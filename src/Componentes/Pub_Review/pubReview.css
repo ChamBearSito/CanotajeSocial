@@ -1,0 +1,25 @@
+.review-container{
+    padding: 5px 10px;
+    color:#000;
+    font-size: 15px;
+    position: relative;
+    display:flex;
+    width:400px;
+    min-height:auto;
+    background-color: #fff;
+}
+
+.review-profile{
+    margin-right: 10px;
+}
+
+.review-content{
+    overflow-wrap: break-word;
+    width:45%;
+}
+
+.rating{
+    pointer-events: none;
+    position:absolute;
+    right: 5px;
+}
