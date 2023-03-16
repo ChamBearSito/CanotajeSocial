@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 
-import Foto from "../../assets/img/jesseywal.jpg"
 import Logo from "../../assets/img/CannotExpress.png"
-
 
 import { SlMap } from "react-icons/sl"
 import { FaPhotoVideo } from "react-icons/fa"
@@ -18,14 +16,35 @@ import { ImageContext } from '../../context/Estadofoto'
 import Footer from '../Footer/Footer'
 import UsuarioInformacion from '../InfoUsuario/UsuarioInformacion'
 import { LoginContext } from '../../context/Login'
+import DetailsPlaces from '../ParaDetailplace/DetailsPlaces'
+import { getAPlace } from '../../api';
+import { render } from '@testing-library/react'
 
 const Perfil = (props) => {
   const [theUser, setTheUser] = useState({});
   const [thePlaces, setThePlaces] = useState([]);
   const [theEvents, setTheEvents] = useState([]);
+  const [modalPlace, setModalPlace] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+
   const { pId } = useParams();
   const { image, setImage } = useContext(ImageContext);
   const { logedUser, users } = useContext(LoginContext);
+
+  const getThePlace=async(pId)=>{
+    const response = await getAPlace(pId);
+    setModalPlace(response.data)
+  }
+
+  const searchTheUser = async (pId) => {
+    const response = await getAUser(pId);
+    setTheUser(response.data)
+  }
+  
+  const chargeThePubs = async (pId) => {
+    const response = await getAllPlacesForUser(pId);
+    setThePlaces(response.data)
+  }
 
   //useEffect para cargar datos del perfil
   useEffect(() => {
@@ -36,22 +55,14 @@ const Perfil = (props) => {
     }
 
     chargeThePubs(pId).then().catch((err) => console.log(err))
+    getThePlace(1).then().catch((err)=>console.log(err));
   }, [])
-
-  const searchTheUser = async (pId) => {
-    const response = await getAUser(pId);
-    setTheUser(response.data)
-  }
-
-  const chargeThePubs = async (pId) => {
-    const response = await getAllPlacesForUser(pId);
-    setThePlaces(response.data)
-  }
 
   const closeModal = () => {
     document.getElementById('my-modal-3').checked = false;
     turnScrollIn();
   }
+
 
   const turnScrollIn = () => {
     const theModal = document.getElementById('my-modal-3');
@@ -63,6 +74,7 @@ const Perfil = (props) => {
       window.onscroll = function () { };
     }
   }
+  
   return (
     <>
       {/* Put this part before </body> tag */}
@@ -126,12 +138,25 @@ const Perfil = (props) => {
       </div>
       {/* Publicaciones  */}
       <div className='grid grid-cols-3  gap-5 text-center mx-4 my-4' >
-        {thePlaces.map((aPlace)=>(
-          <div key={aPlace.id} className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl '>
-            <figure><img className='card' src={aPlace.images[1].url} alt="Shoes" /></figure>
-          </div>
-        ))}
+        {thePlaces.map((aPlace) => {
+          return(
+          <div key={aPlace.id}>
+            <label onClick={() => {setModalPlace(aPlace);setIsOpen(!isOpen)}} htmlFor="my-modal-4">
+              <div className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl '>
+                <figure><img className='card' src={aPlace.images[1].url} alt="Shoes" /></figure>
+              </div>
+            </label>
+            {/* Put this part before </body> tag */}
 
+          </div>
+        )})}
+        <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+        <div className="modal ">
+          <div className="modal-box relative border-2 border-info">
+            <label onClick={() => setIsOpen(!isOpen)} htmlFor="my-modal-4" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+            <DetailsPlaces place={modalPlace} isOpen={isOpen}/>
+          </div>
+        </div>
       </div>
 
       <Footer />

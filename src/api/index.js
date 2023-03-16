@@ -43,6 +43,14 @@ const getLogin = async (aUser) => {
   }
 };
 
+const getAPlace = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/places/${pId}`);
+    return await response.json();
+  } catch (error) {
+    console.log("error on getAPlace", error);
+  }
+};
 const getAllPlaces = async () => {
   try {
     const response = await fetch(`${URL}/places`);
@@ -85,5 +93,6 @@ export {
   getLogin,
   getAUser,
   getAllPlacesForUser,
-  getAllEventsForUser
+  getAllEventsForUser,
+  getAPlace
 };
