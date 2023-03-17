@@ -15,7 +15,7 @@ import ModalSubida from './Componentes/ParaSubidaPlace/ModalSubida';
 import Review from './Componentes/Review/Review';
 import Comment from '../src/Componentes/Comment/Comment'
 import Search from './Componentes/Search/Search';
-import { getAllPlaces } from './api';
+import { getAllEvents } from './api';
 
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
       
       <Route path="/" element={<PaginaBienvenida/>}/>
       <Route path="/Infousuario" element={<UsuarioInformacion/>}/>
-      <Route path="/prueba" element={<PaginaPrincipal events={getAllPlaces()}/>}/>
+      <Route path="/prueba" element={<ModalSubida />}/>
 
       <Route path="/login" element={<Login/>   }/>
       <Route path="/perfil/:pId" element={ <PerfilBueno/> }/>

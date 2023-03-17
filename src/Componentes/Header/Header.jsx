@@ -7,7 +7,7 @@ import { LoginContext } from '../../context/Login'
 import Search from '../Search/Search'
 import RellenoModal from '../ParaSubidaPlace/RellenoModal'
 import RellenoModalEvento from '../ParaSubirEvento/RellenoModalEvento'
-import { getAllPlaces } from '../../api'
+import { getAllEvents } from '../../api'
 
 const Header = () => {
   const { logedUser } = useContext(LoginContext)
@@ -63,7 +63,7 @@ const Header = () => {
 <div className="modal">
   <div className="modal-box relative max-w-screen-md border-2 border-info" >
     <label htmlFor="my-modal-3"  className="btn btn-sm btn-circle absolute right-2 top-2 input-info">✕</label>
-  <RellenoModal events={getAllPlaces()}/>
+  <RellenoModal />
   </div>
 </div>
 

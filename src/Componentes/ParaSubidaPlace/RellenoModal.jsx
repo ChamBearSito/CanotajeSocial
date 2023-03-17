@@ -81,7 +81,8 @@ const onAddPlace = (e) => {
 
 
 
-          <select className="select select-primary w-full max-w-fit mx-0 mt-3 sm:mx-28" value={place.waterType} onChange={onAddPlace} id="waterType">
+          <select className="select select-primary w-full max-w-fit  mt-3 mx-20 sm:mx-"
+           value={place.waterType} onChange={onAddPlace} id="waterType">
             <option disabled selected>Tranquilas/Bravas</option>
             <option>Aguas Tranquilas</option>
             <option>Aguas Bravas</option>

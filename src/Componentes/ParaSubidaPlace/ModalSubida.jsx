@@ -1,4 +1,5 @@
 import React from 'react'
+import { getAllEvents } from '../../api'
 import RellenoModalEvento from '../ParaSubirEvento/RellenoModalEvento'
 import RellenoModal from './RellenoModal'
 
@@ -37,7 +38,7 @@ evento
 <div className="modal">
   <div className="modal-box relative max-w-screen-md border-2 border-info" >
     <label htmlFor="my-modal-4"  className="btn btn-sm btn-circle absolute right-2 top-2 input-info">✕</label>
-  <RellenoModalEvento nombre="Publicación"/>
+  <RellenoModalEvento />
   </div>
 </div>
     </>
