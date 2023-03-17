@@ -1,22 +1,36 @@
 import React from 'react'
 
-const RellenoModal = (props) => {
-  // las props es para cuando lo llamemos aparezca evento o publicaion xd
+const RellenoModalEvento = () => {
   return (
-    <>
-      <h1 className='mb-3'>Agregar {props.nombre}</h1>
+   <>
+   
+   <h1 className='mb-3'>Agregar Evento</h1>
 
       <div className="grid grid-cols-2 gap-5 mb-4">
         <div className='col-span-2  sm:col-span-1'>
 
-          <label >Nombre del Lugar</label>
-          <input type="text" className='input input-bordered input-info w-full max-w-xs mt-2' />
+        <label>Id de Evento</label>
+        <select className="select select-primary w-full max-w-xs">
+  <option disabled selected>Id</option>
+  <option>1</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+</select>
+        
+          <label >Nombre del Evento</label>
+          <input type="text" className='input input-bordered input-info w-full max-w-xs mt-2' placeholder='Remen Muchachos' />
         </div>
 
         <div className='col-span-2  sm:col-span-1'>
 
           <label >Ubicación</label>
-          <input type="text" className='input input-bordered input-info w-full  mt-2' />
+          <input type="text" className='input input-bordered input-info w-full  mt-2' placeholder='Club Nautico....'/>
+
+
+          <input type="date" className='input input-bordered input-info  w-full mt-6' />
+
+
         </div>
 
 
@@ -25,7 +39,7 @@ const RellenoModal = (props) => {
           <label >Descripción</label>
 
 
-          <textarea className='input input-bordered input-info mt-2 p-3 w-full  py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ' >
+          <textarea placeholder='La Nueva Fiesta del Canotaje esta a la vuelta de la Boya, acompañanos...' className='input input-bordered input-info mt-2 p-3 w-full  py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ' >
 
           </textarea>
 
@@ -39,13 +53,7 @@ const RellenoModal = (props) => {
 
 
 
-          <select className="select select-primary w-full max-w-fit mx-0 mt-3 sm:mx-28">
-            <option disabled selected>Tranquilas/Bravas</option>
-            <option>Aguas Tranquilas</option>
-            <option>Aguas Bravas</option>
-
-
-          </select>
+         
 
 
         </div>
@@ -79,8 +87,9 @@ const RellenoModal = (props) => {
         </div>
       </div>
 
-    </>
+   
+   </>
   )
 }
 
-export default RellenoModal
+export default RellenoModalEvento
