@@ -4,6 +4,7 @@ import logito from "../../assets/img/CannotExpress.png"
 import walt from "../../assets/img/walter.png"
 import { ImageContext } from '../../context/Estadofoto'
 import { LoginContext } from '../../context/Login'
+import Search from '../Search/Search'
 
 const Header = () => {
   const { logedUser } = useContext(LoginContext)
@@ -28,7 +29,7 @@ const Header = () => {
         </div>
         <div className="flex-none gap-2">
           <div className="form-control mx-auto">
-            <input type="text" placeholder="Search" className="input input-bordered" />
+          <Search/>
           </div>
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
