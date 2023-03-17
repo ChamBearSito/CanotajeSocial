@@ -16,6 +16,7 @@ import Review from './Componentes/Review/Review';
 import Comment from '../src/Componentes/Comment/Comment'
 import Search from './Componentes/Search/Search';
 import { getAllEvents } from './api';
+import Event from './Componentes/Event/Event';
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
       
       <Route path="/" element={<PaginaBienvenida/>}/>
       <Route path="/Infousuario" element={<UsuarioInformacion/>}/>
-      <Route path="/prueba" element={<ModalSubida />}/>
+      <Route path="/prueba" element={<Event/>}/>
 
       <Route path="/login" element={<Login/>   }/>
       <Route path="/perfil/:pId" element={ <PerfilBueno/> }/>

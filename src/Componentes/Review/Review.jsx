@@ -22,7 +22,7 @@ const Review = ({onReview}) => {
    <>
    <div className='m-20'>
 
-        <form  onSubmit={handleSubmit} className="border-2 border-info w-fit p-3 rounded-xl">
+        <form  onSubmit={handleSubmit} >
             
         
             <label><h1>Rating</h1></label>

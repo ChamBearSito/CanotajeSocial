@@ -7,7 +7,7 @@ const Star = ({value,onClick}) => {
   return (
     <>
         
-      <span className='flex flex-wrap' onClick={() => onClick(value)} style={{ cursor: "pointer" }}>
+      <span className='flex flex-wrap bg-black p-3 input' onClick={() => onClick(value)} style={{ cursor: "pointer" }}>
       {value <= Math.floor(value) ? filledStar : emptyStar}
       {value >= Math.ceil(value) ? emptyStar : filledStar}
       {value - Math.floor(value) >= 0.5 ? filledStar : emptyStar}

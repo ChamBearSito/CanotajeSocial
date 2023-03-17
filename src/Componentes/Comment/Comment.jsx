@@ -11,7 +11,7 @@ const Comment = ({onComment}) => {
 
   return (
     <div>
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} >
      
       <label> <h1>Add a comment</h1></label> 
       <textarea className='border-2 border-info max-w-xs h-24 w-full input input-bordered' cols="30" rows="20"  value={comment} onChange={(e) => setComment(e.target.value)}></textarea> 
