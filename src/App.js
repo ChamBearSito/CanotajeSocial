@@ -11,6 +11,7 @@ import PerfilBueno from './Componentes/Perfil/PerfilBueno';
 import LoginContextProvider from './context/Login';
 import InfoUsuario from './Componentes/InfoUsuario/InfoUsuario';
 import UsuarioInformacion from './Componentes/InfoUsuario/UsuarioInformacion';
+import ModalSubida from './Componentes/ParaSubida/ModalSubida';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       
       <Route path="/" element={<PaginaBienvenida/>}/>
       <Route path="/Infousuario" element={<UsuarioInformacion/>}/>
+      <Route path="/prueba" element={<ModalSubida/>}/>
 
       <Route path="/login" element={<Login/>   }/>
       <Route path="/perfil/:pId" element={ <PerfilBueno/> }/>
