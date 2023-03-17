@@ -1,22 +1,64 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom';
 
-const RellenoModal = (props) => {
-  // las props es para cuando lo llamemos aparezca evento o publicaion xd
+
+
+const RellenoModal = ( ) => {
+
+  
+
+  
+
+  const [place, setPlace] = useState({
+    name: "",
+    image: "https://via.placeholder.com/300",
+    description: "",
+    location: "",
+    rating: 0,
+    waterType:"",
+    reviews: [],
+    events: [],
+
+  })
+
+// const placeIds = events.map((event)=>event.id);
+
+
+const handleAddPlace = (e) => {
+  e.preventDefault();
+  console.log(place);
+ 
+};
+
+const onAddPlace = (e) => {
+  e.preventDefault();
+
+  const value = e.target.value;
+  const element = e.target.id;
+  setPlace({ ...place, [element]: value });
+  
+};
+
+
+
+
   return (
     <>
+    <form onSubmit={handleAddPlace}>
       <h1 className='mb-3'>Agregar Lugar</h1>
 
       <div className="grid grid-cols-2 gap-5 mb-4">
         <div className='col-span-2  sm:col-span-1'>
 
           <label >Nombre del Lugar</label>
-          <input type="text" className='input input-bordered input-info w-full max-w-xs mt-2' placeholder='Club Nautico'/>
+          <input type="text" className='input input-bordered input-info w-full max-w-xs mt-2' placeholder='Club Nautico' value={place.name} onChange={onAddPlace} id="name"/>
         </div>
 
         <div className='col-span-2  sm:col-span-1'>
 
           <label >Ubicación</label>
-          <input type="text" className='input input-bordered input-info w-full  mt-2' placeholder='La Paz, Colonia' />
+          <input type="text" className='input input-bordered input-info w-full  mt-2' placeholder='La Paz, Colonia'
+          value={place.location} onChange={onAddPlace} id="location" />
         </div>
 
 
@@ -25,7 +67,7 @@ const RellenoModal = (props) => {
           <label >Descripción</label>
 
 
-          <textarea placeholder='Hermoso Lugar para pasar el rato en familia...' className='input input-bordered input-info mt-2 p-3 w-full  py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ' >
+          <textarea placeholder='Hermoso Lugar para pasar el rato en familia...' className='input input-bordered input-info mt-2 p-3 w-full  py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ' value={place.description} onChange={onAddPlace} id="description" >
 
           </textarea>
 
@@ -35,11 +77,11 @@ const RellenoModal = (props) => {
         <div className='col-span-2  sm:col-span-2'>
 
 
-          <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+          <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs"  onChange={onAddPlace} id="image" />
 
 
 
-          <select className="select select-primary w-full max-w-fit mx-0 mt-3 sm:mx-28">
+          <select className="select select-primary w-full max-w-fit mx-0 mt-3 sm:mx-28" value={place.waterType} onChange={onAddPlace} id="waterType">
             <option disabled selected>Tranquilas/Bravas</option>
             <option>Aguas Tranquilas</option>
             <option>Aguas Bravas</option>
@@ -79,6 +121,7 @@ const RellenoModal = (props) => {
         </div>
       </div>
 
+      </form>
     </>
   )
 }
