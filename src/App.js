@@ -13,6 +13,7 @@ import InfoUsuario from './Componentes/InfoUsuario/InfoUsuario';
 import UsuarioInformacion from './Componentes/InfoUsuario/UsuarioInformacion';
 import ModalSubida from './Componentes/ParaSubida/ModalSubida';
 import Review from './Componentes/Review/Review';
+import Comment from '../src/Componentes/Comment/Comment'
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
       
       <Route path="/" element={<PaginaBienvenida/>}/>
       <Route path="/Infousuario" element={<UsuarioInformacion/>}/>
-      <Route path="/prueba" element={<Review/>}/>
+      <Route path="/prueba" element={<Comment/>}/>
 
       <Route path="/login" element={<Login/>   }/>
       <Route path="/perfil/:pId" element={ <PerfilBueno/> }/>

@@ -12,9 +12,15 @@ const Comment = ({onComment}) => {
   return (
     <div>
     <form onSubmit={handleSubmit}>
-      <label>Add a comment:</label>
-      <textarea value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
-      <button type="submit">Post</button>
+     
+      <label> <h1>Add a comment</h1></label> 
+      <textarea className='border-2 border-info max-w-xs h-24 w-full input input-bordered' cols="30" rows="20"  value={comment} onChange={(e) => setComment(e.target.value)}></textarea> 
+
+      <br/>
+     
+        <button className='btn btn-info mt-3 hover:scale-110 transition duration-300 ' type="submit">Publicar Comentario</button>
+
+
     </form>
   </div>
   )
