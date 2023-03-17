@@ -11,7 +11,7 @@ const Footer = () => {
 
   <div>
     <img src={logito} className="w-52" alt="" />
-    <p>ACME Industries Ltd.<br/>Providing reliable tech since 1992</p>
+    <p>CANNOT Industries Ltd.<br/>Promoviendo el canotaje desde 1992</p>
   </div> 
 
     </div>

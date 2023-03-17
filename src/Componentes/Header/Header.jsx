@@ -5,6 +5,8 @@ import walt from "../../assets/img/walter.png"
 import { ImageContext } from '../../context/Estadofoto'
 import { LoginContext } from '../../context/Login'
 import Search from '../Search/Search'
+import RellenoModal from '../ParaSubidaPlace/RellenoModal'
+import RellenoModalEvento from '../ParaSubirEvento/RellenoModalEvento'
 
 const Header = () => {
   const { logedUser } = useContext(LoginContext)
@@ -45,7 +47,8 @@ const Header = () => {
 
                 </Link>
               </li>
-              <li><a>Ajustes</a></li>
+              <li><label htmlFor="my-modal-3">Publicar Lugar</label></li>
+              <li><label htmlFor="my-modal-4">Publicar Evento</label></li>
               <li><Link to={`/login`} onClick={cerrarSesion} className="justify-between">
                 Cerrar Sesion
 
@@ -54,6 +57,23 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+<div className="modal">
+  <div className="modal-box relative max-w-screen-md border-2 border-info" >
+    <label htmlFor="my-modal-3"  className="btn btn-sm btn-circle absolute right-2 top-2 input-info">✕</label>
+  <RellenoModal nombre="Publicación"/>
+  </div>
+</div>
+
+
+<input type="checkbox" id="my-modal-4" className="modal-toggle" />
+<div className="modal">
+  <div className="modal-box relative max-w-screen-md border-2 border-info" >
+    <label htmlFor="my-modal-4"  className="btn btn-sm btn-circle absolute right-2 top-2 input-info">✕</label>
+  <RellenoModalEvento nombre="Publicación"/>
+  </div>
+</div>
     </>
   )
 }
