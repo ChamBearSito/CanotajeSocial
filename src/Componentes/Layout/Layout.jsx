@@ -1,21 +1,21 @@
-import React from 'react'
-import { ImageProvider } from '../../context/Estadofoto'
-import Footer from '../Footer/Footer'
-import Header from '../Header/Header'
+import React from "react";
+import { ImageProvider } from "../../context/Estadofoto";
+import SearchProvider from "../../context/SearchContext";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
     <>
-    <ImageProvider>
-    <Header/>
-    <main>
-        {children}
-    </main>
-    <Footer/>
-    </ImageProvider>
-    
+      <ImageProvider>
+        <SearchProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </SearchProvider>
+      </ImageProvider>
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

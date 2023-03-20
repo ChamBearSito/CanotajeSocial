@@ -1,0 +1,50 @@
+.toolBar{
+    display:flex;
+    height: 80px;
+    width:100%;
+    border: 5px solid #102f51;
+    background-color:#2fa8e3;
+    position:sticky;
+    z-index:10000;
+    justify-content: center;
+    top:0;
+    left:0;
+}
+
+.toolsIcons{
+    display:flex;
+    flex:1 1;
+    width:100%;
+    justify-content:space-evenly;
+    font-size: 45px;
+    align-items: center;
+}
+
+.createPlace{
+    display:flex;
+    max-width: 80px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolsIcons .createPlace p{
+    font-size:10px;
+}
+
+.createEvent{
+    display:flex;
+    max-width: 80px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolsIcons .createEvent p{
+    font-size:10px;
+}
+
+.createPlace:hover, .createEvent:hover{
+    cursor: pointer;
+    color:#102f51;
+}

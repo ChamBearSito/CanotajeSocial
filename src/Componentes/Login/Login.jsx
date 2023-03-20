@@ -4,14 +4,15 @@ import { BiUser, BiAt, BiRename, BiCurrentLocation } from "react-icons/bi";
 import { BiLockAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../context/Login.jsx";
-import { addRegister, getLogin } from "../../api";
+import { addRegister, getLogin, deleteFavorite } from "../../api";
 
 const Login = () => {
+
   const navigate=useNavigate();
 
   const {addLogin}=useContext(LoginContext);
 
-  const {logedUser,setLogedUser}=useContext(LoginContext);
+  const {getFavoritesXUser,setLogedUser}=useContext(LoginContext);
   const {register}=useContext(LoginContext);
   const {turnRegister}=useContext(LoginContext);
   
@@ -49,10 +50,10 @@ const Login = () => {
     else{
       const loginUser=async()=>{ 
         const response = await getLogin(theUser)
-
         if(response.data.user){
-          setLogedUser(response.data.user)
-          navigate('/principal')
+          setLogedUser(response.data.user);
+          getFavoritesXUser(response.data.user.id);
+          navigate('/principal');
         }
         };
 

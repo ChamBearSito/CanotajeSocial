@@ -5,12 +5,15 @@ import walt from "../../assets/img/walter.png"
 import { ImageContext } from '../../context/Estadofoto'
 import { LoginContext } from '../../context/Login'
 import Search from '../Search/Search'
-import RellenoModal from '../ParaSubidaPlace/RellenoModal'
-import RellenoModalEvento from '../ParaSubirEvento/RellenoModalEvento'
+
 import { getAllEvents } from '../../api'
 
 const Header = () => {
   const { logedUser } = useContext(LoginContext)
+  let loged=false;
+  if(logedUser.id!=null){
+    loged=true;
+  }
   const { setLogedUser } = useContext(LoginContext)
   const { image } = useContext(ImageContext);
 
@@ -34,47 +37,35 @@ const Header = () => {
           <div className="form-control mx-auto">
           <Search/>
           </div>
+          {!loged &&
+          <button className="btn btn-outline btn-primary">
+            <Link to={`/login`} className="justify-between">
+                Log In
+          </Link></button>}
+          {loged &&
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
                 <img src={image} alt="ejje" />
               </div>
             </label>
-            <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+            <ul tabIndex={0} style={{zIndex:10001}} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
               <li>
-                {console.log(logedUser)}
                 <Link to={`/perfil/${logedUser.id}`} className="justify-between">
                   Perfil
-
                 </Link>
               </li>
-              <li><label htmlFor="my-modal-3">Publicar Lugar</label></li>
-              <li><label htmlFor="my-modal-4">Publicar Evento</label></li>
+              
               <li><Link to={`/login`} onClick={cerrarSesion} className="justify-between">
                 Cerrar Sesion
-
               </Link></li>
             </ul>
           </div>
+          }
         </div>
       </div>
 
-      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-<div className="modal">
-  <div className="modal-box relative max-w-screen-md border-2 border-info" >
-    <label htmlFor="my-modal-3"  className="btn btn-sm btn-circle absolute right-2 top-2 input-info">✕</label>
-  <RellenoModal />
-  </div>
-</div>
 
-
-<input type="checkbox" id="my-modal-4" className="modal-toggle" />
-<div className="modal">
-  <div className="modal-box relative max-w-screen-md border-2 border-info" >
-    <label htmlFor="my-modal-4"  className="btn btn-sm btn-circle absolute right-2 top-2 input-info">✕</label>
-  <RellenoModalEvento />
-  </div>
-</div>
     </>
   )
 }

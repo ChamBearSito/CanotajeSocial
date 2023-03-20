@@ -1,29 +1,35 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from "react";
 
-import Logo from "../../assets/img/CannotExpress.png"
+import Logo from "../../assets/img/CannotExpress.png";
 
-import { BsFillCalendarPlusFill } from "react-icons/bs"
-import {BiMap} from "react-icons/bi"
+import { BsFillCalendarPlusFill } from "react-icons/bs";
+import { BiMap } from "react-icons/bi";
 
-import { AiOutlineUser } from "react-icons/ai"
-import { RxBookmarkFilled } from "react-icons/rx"
-import { BsGearWideConnected } from "react-icons/bs"
-import { AiOutlineHome } from "react-icons/ai"
+import { RxBookmarkFilled } from "react-icons/rx";
+import { BsGearWideConnected } from "react-icons/bs";
+import { AiOutlineHome } from "react-icons/ai";
+import DetailEvent from "../ParaDetailEvent/DetailEvent";
 
-import { Link, useParams } from 'react-router-dom'
-import { getAUser, getAllPlacesForUser } from '../../api';
-import { ImageContext } from '../../context/Estadofoto'
-import Footer from '../Footer/Footer'
-import UsuarioInformacion from '../InfoUsuario/UsuarioInformacion'
-import { LoginContext } from '../../context/Login'
-import DetailsPlaces from '../ParaDetailplace/DetailsPlaces'
-import { getAPlace } from '../../api';
-import { render } from '@testing-library/react'
+import { Link, useParams } from "react-router-dom";
+import { getAUser, getAllPlacesForUser } from "../../api";
+import { ImageContext } from "../../context/Estadofoto";
+import Footer from "../Footer/Footer";
+import UsuarioInformacion from "../InfoUsuario/UsuarioInformacion";
+import { LoginContext } from "../../context/Login";
+import DetailsPlaces from "../ParaDetailplace/DetailsPlaces";
+import { getAPlace, getAEvent, getAllEvents } from "../../api";
 
 const Perfil = (props) => {
+  const [modalEvent, setModalEvent] = useState({});
+  const [isOpenEvent, setIsOpenEvent] = useState(false);
+
+  const {getFavoritesXUser}=useContext(LoginContext);
+  const { favoritesUser } = useContext(LoginContext);
+
   const [theUser, setTheUser] = useState({});
   const [thePlaces, setThePlaces] = useState([]);
-  const [theEvents, setTheEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+
   const [modalPlace, setModalPlace] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,137 +37,342 @@ const Perfil = (props) => {
   const { image, setImage } = useContext(ImageContext);
   const { logedUser, users } = useContext(LoginContext);
 
-  const getThePlace=async(pId)=>{
+  const [thePage, setThePage] = useState({
+    pageActually: "pagePlace",
+  });
+
+  const [filterEvents, setFilterEvents] = useState([]);
+
+  const filterEventsArray = () => {
+    let eventFilterArray = [];
+    allEvents.map((aEvent) => {
+      if (aEvent.placeId == modalPlace.id) {
+        eventFilterArray.push(aEvent);
+      }
+    });
+    setFilterEvents(eventFilterArray);
+  };
+
+  useEffect(() => {
+    filterEventsArray();
+  }, [modalPlace]);
+
+  const getEvents = async () => {
+    const response = await getAllEvents();
+    setAllEvents(response.data);
+  };
+
+  const [savePubs, setSavePubs] = useState([]);
+
+  const onChangePage = (e) => {
+    const value = e.target.value;
+    setThePage({ pageActually: value });
+  };
+
+  const chargeFavorites = async () => {
+    await getFavoritesXUser(logedUser?logedUser.id:pId);
+    if (favoritesUser) {
+      let response;
+      let saveArray = [];
+      favoritesUser.map(async (aFav) => {
+        if (!aFav.eventId) {
+          response = await getAPlace(aFav.placeId);
+        } else {
+          response = await getAEvent(aFav.eventId);
+        }
+        saveArray.push(response.data);
+      });
+      setSavePubs(saveArray);
+    }
+  };
+
+  const getThePlace = async (pId) => {
     const response = await getAPlace(pId);
-    setModalPlace(response.data)
-  }
+    setModalPlace(response.data);
+  };
 
   const searchTheUser = async (pId) => {
     const response = await getAUser(pId);
-    setTheUser(response.data)
-  }
-  
+    setTheUser(response.data);
+  };
+
   const chargeThePubs = async (pId) => {
     const response = await getAllPlacesForUser(pId);
-    setThePlaces(response.data)
-  }
+    setThePlaces(response.data);
+  };
 
   //useEffect para cargar datos del perfil
   useEffect(() => {
     if (logedUser.id == pId) {
       setTheUser(logedUser);
     } else {
-      searchTheUser(pId).then().catch((err) => console.log(err));
+      searchTheUser(pId)
+        .then()
+        .catch((err) => console.log(err));
     }
+    
+    chargeFavorites();
 
-    chargeThePubs(pId).then().catch((err) => console.log(err))
-    getThePlace(1).then().catch((err)=>console.log(err));
-  }, [])
+    getEvents()
+      .then()
+      .catch((err) => console.log(err));
+    filterEventsArray();
+    chargeThePubs(pId)
+      .then()
+      .catch((err) => console.log(err));
+  }, []);
 
   const closeModal = () => {
-    document.getElementById('my-modal-3').checked = false;
+    document.getElementById("my-modal-3").checked = false;
     turnScrollIn();
-  }
-
+  };
 
   const turnScrollIn = () => {
-    const theModal = document.getElementById('my-modal-3');
+    const theModal = document.getElementById("my-modal-3");
     if (theModal.checked == true) {
       let y = window.pageYOffset;
       let x = window.pageXOffset;
-      window.onscroll = () => { window.scrollTo(x, y) }
+      window.onscroll = () => {
+        window.scrollTo(x, y);
+      };
     } else {
-      window.onscroll = function () { };
+      window.onscroll = function () {};
     }
-  }
-  
+  };
+
   return (
     <>
       {/* Put this part before </body> tag */}
-      <input type="checkbox" id="my-modal-3" onChange={turnScrollIn} className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="my-modal-3"
+        onChange={turnScrollIn}
+        className="modal-toggle"
+      />
       <div className="modal">
-        <div className="modal-box relative border-2 border-info" >
-          <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <div className="modal-box relative border-2 border-info">
+          <label
+            htmlFor="my-modal-3"
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+          >
+            ✕
+          </label>
           <UsuarioInformacion closeModal={closeModal} />
         </div>
       </div>
 
-      <nav className=''>
-        <div className='grid grid-cols-12 text-center '>
-          <div className='col-span-12  p-5 text-center'>
-            <h1 className=' text-xl sm:text-5xl'>
-              <img className='mx-auto w-44 sm:w-48' src={Logo} alt="" />
+      <nav className="">
+        <div className="grid grid-cols-12 text-center ">
+          <div className="col-span-12  p-5 text-center">
+            <h1 className=" text-xl sm:text-5xl">
+              <img className="mx-auto w-44 sm:w-48" src={Logo} alt="" />
             </h1>
           </div>
-          <div className='col-span-12  p-5 gap-1 sm:gap-x-20'>
-            <div className='grid grid-cols-6 text-center gap-1 sm:gap-x-20 '>
-              <div className='col-span-3  justify-center  py-5'>
+          <div className="col-span-12  p-5 gap-1 sm:gap-x-20">
+            <div className="flex flex-auto justify-center gap-1 sm:gap-x-60">
+              <div className="col-span-3  justify-center  py-5">
                 <Link to="/principal">
-                  <button className='cursor-pointer hover:scale-110'>
-                    <AiOutlineHome className='logos' size={60} fill="white" />
+                  <button className="cursor-pointer hover:scale-110">
+                    <AiOutlineHome className="logos" size={60} fill="white" />
                   </button>
                 </Link>
               </div>
-            
-              <div className='col-span-3 justify-center py-5'><button className='cursor-pointer  hover:scale-110'>
-                <label htmlFor="my-modal-3">
-                  <BsGearWideConnected className='logos' size={60} fill="white" />
-                </label>
-              </button></div>
+              {logedUser.id && (
+                <div className="col-span-3 justify-center py-5">
+                  <button className="cursor-pointer  hover:scale-110">
+                    <label htmlFor="my-modal-3">
+                      <BsGearWideConnected
+                        className="logos"
+                        size={60}
+                        fill="white"
+                      />
+                    </label>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </nav>
 
-      <div className='grid grid-cols-6'>
-        <div className='sm:col-span-6 col-span-6  text-center pt-5 pb-5'>
-          <div className='grid grid-cols-2 mx-5'>
-            <div className='col-span-2 flex justify-center'>
-              <img className=' w-40 h-40 rounded-full shadow shadow-white' src={image} alt="" />
+      <div className="grid grid-cols-6">
+        <div className="sm:col-span-6 col-span-6  text-center pt-5 pb-5">
+          <div className="grid grid-cols-2 mx-5">
+            <div className="col-span-2 flex justify-center">
+              <img
+                className=" w-40 h-40 rounded-full shadow shadow-white"
+                src={image}
+                alt=""
+              />
             </div>
-            <div className='col-span-2 flex justify-center'>
-              <div className='gird grid-cols-2'>
-                <div className='col-span-2'> <h2 className='text-2xl pt-4 pb-3 '>{theUser.name} {theUser.lastName}</h2></div>
-                <div className='col-span-2'>  <p>{theUser.description}</p></div>
+            <div className="col-span-2 flex justify-center">
+              <div className="gird grid-cols-2">
+                <div className="col-span-2">
+                  {" "}
+                  <h2 className="text-2xl pt-4 pb-3 ">
+                    {theUser.name} {theUser.lastName}
+                  </h2>
+                </div>
+                <div className="col-span-2">
+                  {" "}
+                  <p>{theUser.description}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className=''>
-        <div className='grid grid-cols-6 text-center gap-1 sm:gap-x-20'>
-          <div className='col-span-2  justify-center  py-5'><button className='cursor-pointer hover:scale-110'><BiMap className='logos' size={60} fill="white" /></button></div>
-          <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><BsFillCalendarPlusFill className='logos' size={60} fill="white" /></button></div>
-          <div className='col-span-2 justify-center py-5'><button className='cursor-pointer hover:scale-110'><RxBookmarkFilled className='logos' size={60} fill="white" /></button></div>
+      <div className="">
+        <div className="flex flex-auto justify-center gap-1 sm:gap-x-20">
+          <div className="col-span-2  justify-center  py-5">
+            <input
+              type="radio"
+              name="changePages"
+              onClick={(e) => onChangePage(e)}
+              id="pagePlaces"
+              value="pagePlaces"
+              className="modal-toggle"
+            />
+            <label htmlFor="pagePlaces">
+              <BiMap
+                className="logos cursor-pointer hover:scale-110"
+                size={60}
+                fill="white"
+              />
+            </label>
+          </div>
+
+          <div className="col-span-2 justify-center py-5">
+            <input
+              type="radio"
+              onChange={(e) => onChangePage(e)}
+              name="changePages"
+              id="pageEvents"
+              value="pageEvents"
+              className="modal-toggle"
+            />
+            <label htmlFor="pageEvents">
+              <BsFillCalendarPlusFill
+                className="logos cursor-pointer hover:scale-110"
+                size={60}
+                fill="white"
+              />
+            </label>
+          </div>
+          {logedUser.id==pId && (
+            <>
+              <div className="col-span-2 justify-center py-5">
+                <input
+                  type="radio"
+                  id="pageFavorites"
+                  name="changePages"
+                  value="pageFavorites"
+                  className="modal-toggle"
+                  onChange={(e) => onChangePage(e)}
+                />
+                <label htmlFor="pageFavorites">
+                  <RxBookmarkFilled
+                    className="logos cursor-pointer hover:scale-110"
+                    size={60}
+                    fill="white"
+                  />
+                </label>
+              </div>
+            </>
+          )}
         </div>
       </div>
       {/* Publicaciones  */}
-      <div className='grid grid-cols-3  gap-5 text-center mx-4 my-4' >
-        {thePlaces.map((aPlace) => {
-          return(
-          <div key={aPlace.id}>
-            <label onClick={() => {setModalPlace(aPlace);setIsOpen(!isOpen)}} htmlFor="my-modal-4">
-              <div className='col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl '>
-                <figure><img className='card' src={aPlace.images[1].url} alt="Shoes" /></figure>
+      <div className="grid grid-cols-3  gap-5 text-center mx-4 my-4">
+        {thePage.pageActually == "pagePlaces" &&
+          thePlaces.map((aPlace) => {
+            return (
+              <div key={aPlace.id}>
+                <label
+                  onClick={() => {
+                    setModalPlace(aPlace);
+                    setIsOpen(!isOpen);
+                  }}
+                  htmlFor="my-modal-4"
+                >
+                  <div className="col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl ">
+                    <figure>
+                      <img
+                        className="card"
+                        src={aPlace.images[0].url}
+                        alt="Shoes"
+                      />
+                    </figure>
+                  </div>
+                </label>
+                {/* Put this part before </body> tag */}
               </div>
-            </label>
-            {/* Put this part before </body> tag */}
-
-          </div>
-        )})}
+            );
+          })}
+        {logedUser.id == pId &&
+          thePage.pageActually == "pageFavorites" &&
+          savePubs.map((aFav) => (
+            <div key={aFav.id}>
+              <label
+                onClick={() => {
+                  aFav.placeId ? setModalEvent(aFav) : setModalPlace(aFav);
+                  aFav.placeId
+                    ? setIsOpenEvent(!isOpenEvent)
+                    : setIsOpen(!isOpen);
+                }}
+                htmlFor={aFav.placeId ? "my-modal-5" : "my-modal-4"}
+              >
+                <div className="col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl ">
+                  <figure>
+                    <img
+                      className="card"
+                      src={aFav.images[0].url}
+                      alt="Shoes"
+                    />
+                  </figure>
+                </div>
+              </label>
+              {/* Put this part before </body> tag */}
+            </div>
+          ))}
         <input type="checkbox" id="my-modal-4" className="modal-toggle" />
         <div className="modal ">
           <div className="modal-box relative border-2 border-info">
-            <label onClick={() => setIsOpen(!isOpen)} htmlFor="my-modal-4" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-            <DetailsPlaces place={modalPlace} isOpen={isOpen}/>
+            <label
+              onClick={() => setIsOpen(!isOpen)}
+              htmlFor="my-modal-4"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+            >
+              ✕
+            </label>
+            {modalPlace &&
+            <DetailsPlaces
+              events={filterEvents}
+              place={modalPlace}
+              isOpen={isOpen}
+            />
+          }
+          </div>
+        </div>
+        <input type="checkbox" id="my-modal-5" className="modal-toggle" />
+        <div className="modal ">
+          <div className="modal-box relative border-2 border-info">
+            <label
+              onClick={() => setIsOpenEvent(!isOpenEvent)}
+              htmlFor="my-modal-5"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+            >
+              ✕
+            </label>
+            <DetailEvent aEvent={modalEvent} isOpen={isOpenEvent} />
           </div>
         </div>
       </div>
 
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Perfil
+export default Perfil;

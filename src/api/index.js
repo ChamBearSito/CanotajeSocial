@@ -18,6 +18,42 @@ const addRegister = async (aUser) => {
   }
 };
 
+const addFavorite = async (aFav) => {
+  try {
+    const response = await fetch(`${URL}/favorites/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+          {
+          ...aFav
+        }
+      ),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on addFavorite", error);
+  }
+};
+
+const filterPlaces = async(textFilter)=>{
+  try {
+    const response = await fetch(`${URL}/places/search/multi?name=${textFilter}`);
+    return await response.json();
+  } catch (error) {
+    console.log("error on getFilterPlaces", error);
+  }
+}
+
+const getFavoritesUser = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/favorites/user/${pId}`);
+    return await response.json();
+    
+  } catch (error) {
+    console.log("error on getFavoritesUser", error);
+  }
+};
+
 const getAUser = async (pId) => {
   try {
     const response = await fetch(`${URL}/users/profile/${pId}`);
@@ -35,6 +71,21 @@ const getLogin = async (aUser) => {
       body: JSON.stringify({
         email:aUser.email,
         password:aUser.password
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on getLogin", error);
+  }
+};
+
+const createPlace = async (aPlace) => {
+  try {
+    const response = await fetch(`${URL}/places/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aPlace
       }),
     });
     return await response.json();
@@ -77,6 +128,26 @@ const getAllEvents = async () => {
   }
 };
 
+const getAEvent = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/events/${pId}`);
+    return await response.json();
+  } catch (error) {
+    console.log("error on getAEvent", error);
+  }
+};
+
+const deleteFavorite = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/favorites/delete/${pId}`, {
+      method: "DELETE",
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on deleteFavorite", error);
+  }
+};
+
 const getAllEventsForUser = async (pId) => {
   try {
     const response = await fetch(`${URL}/events/user/${pId}`);
@@ -94,5 +165,11 @@ export {
   getAUser,
   getAllPlacesForUser,
   getAllEventsForUser,
-  getAPlace
+  getAEvent,
+  getAPlace,
+  createPlace,
+  filterPlaces,
+  getFavoritesUser,
+  addFavorite,
+  deleteFavorite
 };

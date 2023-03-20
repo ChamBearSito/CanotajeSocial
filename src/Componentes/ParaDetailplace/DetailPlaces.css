@@ -1,0 +1,16 @@
+.event-detail-list{
+    margin-bottom:20px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.event-detail-datos{
+    height: 80px;
+    width:120px;
+    margin:5px;
+}
+
+.event-detail-title{
+    font-size: 15px;
+}

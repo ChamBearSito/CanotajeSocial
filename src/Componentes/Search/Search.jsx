@@ -1,13 +1,18 @@
-import React from 'react'
+import React,{useContext} from 'react'
+import { SearchContext } from '../../context/SearchContext'
 
-const Search = ({value,onChange}) => {
+const Search = () => {
+    const {searchFilters}=useContext(SearchContext);
+
+    const activateFilter=(value)=>{
+        searchFilters(value);
+    }
 
     return (
         <>
-           <input type="text" placeholder="Search" className="input input-bordered input-info" />
-
-
-
+           <input type="text" placeholder="Search..."
+            className="input input-bordered input-info"
+            onChange={(e)=>{activateFilter(e.target.value)}} />
         </>
     )
 }

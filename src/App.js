@@ -17,6 +17,7 @@ import Comment from '../src/Componentes/Comment/Comment'
 import Search from './Componentes/Search/Search';
 import { getAllEvents } from './api';
 import Event from './Componentes/Event/Event';
+import DetailEvent from './Componentes/ParaDetailEvent/DetailEvent';
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
       
       <Route path="/" element={<PaginaBienvenida/>}/>
       <Route path="/Infousuario" element={<UsuarioInformacion/>}/>
-      <Route path="/prueba" element={<Event/>}/>
+      <Route path="/prueba" element={<DetailEvent/>}/>
 
       <Route path="/login" element={<Login/>   }/>
       <Route path="/perfil/:pId" element={ <PerfilBueno/> }/>
