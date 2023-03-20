@@ -1,32 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { getAllEvents } from "../../api";
+import { createEvent } from "../../api";
+import React, { useContext, useEffect, useState } from "react";
+import { getAllPlaces } from "../../api";
+import { LoginContext } from "../../context/Login";
 
 const RellenoModalEvento = () => {
-
   useEffect(() => {
-    const fetchEvents = async () => {
-      const response = await getAllEvents();
-      console.log("response", response.data);
-      
+    const fetchPlaces = async () => {
+      const response = await getAllPlaces();
+      setThePlaces(response.data);
     };
+
+    fetchPlaces().then().catch((err)=>console.log(err));
   }, []);
 
+  const {logedUser}=useContext(LoginContext);
+
+  const [thePlaces,setThePlaces]=useState([]);
   const [event, setEvent] = useState({
+    userId:logedUser.id,
     placeId: 0,
     name: "",
-    image: "https://via.placeholder.com/300",
+    images: [{url:"https://via.placeholder.com/300"}],
     description: "",
-    location: "",
     date: "2023-05-27",
-    waterType: "",
-    rating: 0,
-    comments: [],
-    reviews: [],
   });
+
+  const addEvent = async (pEvent) => {
+    const response = await createEvent(pEvent);
+    if(response.status==201)
+      alert("Is susscesfully!");
+  };
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-    console.log(event);
+    addEvent(event)
+      .then()
+      .catch((err) => console.log(err));
   };
 
   const onAddEvent = (e) => {
@@ -37,10 +46,27 @@ const RellenoModalEvento = () => {
     setEvent({ ...event, [element]: value });
   };
 
+  const CLOUD_NAME = "ddk8ydo51";
+  const UPLOAD_PRESET = "u2skitgq";
+
+  const upload = async (file) => {
+    const data2 = new FormData();
+    data2.append("file", file);
+    data2.append("upload_preset", UPLOAD_PRESET);
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: "POST", body: data2 }
+    );
+    const data3 = await response.json();
+    
+    setEvent({ ...event, images: [{ url: `${data3.secure_url}` }] }); // reemplazar con un mensaje de éxito o la acción deseada
+    console.log(event)
+  };
+
   return (
     <>
       <form
-      // onSubmit={handleAddEvent}
+        onSubmit={handleAddEvent}
       >
         <h1 className="mb-3">Agregar Evento</h1>
 
@@ -51,8 +77,9 @@ const RellenoModalEvento = () => {
               type="text"
               className="input input-bordered input-info w-full max-w-xs mt-2"
               placeholder="Remen Muchachos"
-
-              // value={event.name} onChange={onAddEvent} id='name'
+              value={event.name} 
+              onChange={onAddEvent} 
+              id='name'
             />
             <div className="mt-7">
               <label>Fecha</label>
@@ -60,26 +87,33 @@ const RellenoModalEvento = () => {
                 type="date"
                 className="input input-bordered input-info  w-full max-w-xs mt-2"
                 id="date"
-                // value={event.date} onChange={onAddEvent}
+                value={event.date} 
+                onChange={onAddEvent}
               />
             </div>
           </div>
 
           <div className="col-span-2  sm:col-span-1">
             <label>Ubicación</label>
-            <input
-              type="text"
+            <input type="text"
               className="input input-bordered input-info w-full  mt-2"
-              placeholder="Club Nautico...."
-              // value={event.location} onChange={onAddEvent} id="location"
-            />
+              placeholder="Club Nautico...." list="brow"
+              id="placeId"
+              onChange={onAddEvent} />
+            <datalist id="brow">
+              {thePlaces && thePlaces.map((aPlace)=>(
+                <option value={aPlace.id} >{aPlace.name} | {aPlace.location}</option>
+              ))}
+            </datalist>
             <div className="mt-6">
               <label>Descripción</label>
 
               <textarea
                 placeholder="La Nueva Fiesta del Canotaje esta a la vuelta de la Boya, acompañanos..."
                 className="input input-bordered input-info mt-2 p-3 w-full  py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset h-40 sm:text-sm sm:leading-6 "
-                // value={event.description} onChange={onAddEvent} id="description"
+                value={event.description} 
+                onChange={onAddEvent} 
+                id="description"
               ></textarea>
             </div>
           </div>
@@ -87,8 +121,9 @@ const RellenoModalEvento = () => {
           <div className="col-span-2  sm:col-span-2">
             <input
               type="file"
-              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-              //  value={event.image} onChange={onAddEvent} id="image"
+              className="file-input file-input-bordered file-input-primary w-full max-w-xs" 
+              onChange={(e)=>upload(e.target.files[0])} 
+              id="image"
             />
           </div>
         </div>

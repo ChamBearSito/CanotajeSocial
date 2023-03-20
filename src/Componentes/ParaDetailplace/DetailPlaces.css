@@ -3,14 +3,21 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .event-detail-datos{
-    height: 80px;
+    height: 90px;
     width:120px;
-    margin:5px;
+    margin:10px;
+}
+
+.event-detail-image{
+    height: 80px;
+    width:120px; 
 }
 
 .event-detail-title{
     font-size: 15px;
+    text-overflow:ellipsis;
 }

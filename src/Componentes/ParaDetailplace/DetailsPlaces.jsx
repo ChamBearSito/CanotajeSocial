@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { BsWindowSidebar } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import DetailEvent from "../ParaDetailEvent/DetailEvent";
 import "./DetailPlaces.css";
@@ -8,8 +9,8 @@ const DetailsPlaces = ({ place, isOpen, events }) => {
   const [isOpenEvent, setIsOpenEvent] = useState(false);
 
   const changeModalEvent=(aEvent)=>{
-    setModalEvent(aEvent)
-    setIsOpenEvent(!isOpenEvent)
+    setModalEvent(aEvent);
+    setIsOpenEvent(!isOpenEvent);
   }
 
   return (
@@ -91,7 +92,7 @@ const DetailsPlaces = ({ place, isOpen, events }) => {
             
             {isOpenEvent &&<>
               <input type="checkbox" id="my-modal-6" className="modal-toggle" />
-              <div className="modal" style={{ zIndex: 10001 }}>
+              <div id="my-modal-event" className="modal" style={{ zIndex: 10001 }}>
                 <div className="modal-box relative border-2 border-info">
                   <label
                     onClick={() => setIsOpenEvent(!isOpenEvent)}

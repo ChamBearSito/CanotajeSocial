@@ -94,6 +94,21 @@ const createPlace = async (aPlace) => {
   }
 };
 
+const createEvent = async (aEvent) => {
+  try {
+    const response = await fetch(`${URL}/events/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aEvent
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on getLogin", error);
+  }
+};
+
 const getAPlace = async (pId) => {
   try {
     const response = await fetch(`${URL}/places/${pId}`);
@@ -157,6 +172,30 @@ const getAllEventsForUser = async (pId) => {
   }
 };
 
+const getAllComments = async()=>{
+  try {
+    const response = await fetch(`${URL}/comments`);
+    return await response.json();
+  } catch (error) {
+    console.log("error on getAllComments", error);
+  }
+}
+
+const createComment = async (aComment) => {
+  try {
+    const response = await fetch(`${URL}/comments/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aComment
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on createComment", error);
+  }
+};
+
 export {
   addRegister,
   getAllPlaces,
@@ -171,5 +210,8 @@ export {
   filterPlaces,
   getFavoritesUser,
   addFavorite,
-  deleteFavorite
+  deleteFavorite,
+  createEvent,
+  getAllComments,
+  createComment
 };

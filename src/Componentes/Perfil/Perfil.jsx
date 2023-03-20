@@ -11,7 +11,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import DetailEvent from "../ParaDetailEvent/DetailEvent";
 
 import { Link, useParams } from "react-router-dom";
-import { getAUser, getAllPlacesForUser } from "../../api";
+import { getAUser, getAllPlacesForUser, getAllEventsForUser } from "../../api";
 import { ImageContext } from "../../context/Estadofoto";
 import Footer from "../Footer/Footer";
 import UsuarioInformacion from "../InfoUsuario/UsuarioInformacion";
@@ -23,11 +23,12 @@ const Perfil = (props) => {
   const [modalEvent, setModalEvent] = useState({});
   const [isOpenEvent, setIsOpenEvent] = useState(false);
 
-  const {getFavoritesXUser}=useContext(LoginContext);
+  const { getFavoritesXUser } = useContext(LoginContext);
   const { favoritesUser } = useContext(LoginContext);
 
   const [theUser, setTheUser] = useState({});
   const [thePlaces, setThePlaces] = useState([]);
+  const [theEvents, setTheEvents] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
 
   const [modalPlace, setModalPlace] = useState({});
@@ -70,7 +71,7 @@ const Perfil = (props) => {
   };
 
   const chargeFavorites = async () => {
-    await getFavoritesXUser(logedUser?logedUser.id:pId);
+    await getFavoritesXUser(logedUser ? logedUser.id : pId);
     if (favoritesUser) {
       let response;
       let saveArray = [];
@@ -86,9 +87,9 @@ const Perfil = (props) => {
     }
   };
 
-  const getThePlace = async (pId) => {
-    const response = await getAPlace(pId);
-    setModalPlace(response.data);
+  const chargeEventsXuser = async () => {
+    const response = await getAllEventsForUser(pId);
+    setTheEvents(response.data);
   };
 
   const searchTheUser = async (pId) => {
@@ -110,10 +111,13 @@ const Perfil = (props) => {
         .then()
         .catch((err) => console.log(err));
     }
-    
+
     chargeFavorites();
 
     getEvents()
+      .then()
+      .catch((err) => console.log(err));
+    chargeEventsXuser()
       .then()
       .catch((err) => console.log(err));
     filterEventsArray();
@@ -140,27 +144,35 @@ const Perfil = (props) => {
     }
   };
 
+  const changeModalEvent = (aEvent) => {
+    setModalEvent(aEvent);
+    setIsOpenEvent(!isOpenEvent);
+  };
+
   return (
     <>
       {/* Put this part before </body> tag */}
-      <input
-        type="checkbox"
-        id="my-modal-3"
-        onChange={turnScrollIn}
-        className="modal-toggle"
-      />
-      <div className="modal">
-        <div className="modal-box relative border-2 border-info">
-          <label
-            htmlFor="my-modal-3"
-            className="btn btn-sm btn-circle absolute right-2 top-2"
-          >
-            ✕
-          </label>
-          <UsuarioInformacion closeModal={closeModal} />
-        </div>
-      </div>
-
+      {logedUser.id == pId && (
+        <>
+          <input
+            type="checkbox"
+            id="my-modal-3"
+            onChange={turnScrollIn}
+            className="modal-toggle"
+          />
+          <div className="modal">
+            <div className="modal-box relative border-2 border-info">
+              <label
+                htmlFor="my-modal-3"
+                className="btn btn-sm btn-circle absolute right-2 top-2"
+              >
+                ✕
+              </label>
+              <UsuarioInformacion closeModal={closeModal} />
+            </div>
+          </div>
+        </>
+      )}
       <nav className="">
         <div className="grid grid-cols-12 text-center ">
           <div className="col-span-12  p-5 text-center">
@@ -177,7 +189,7 @@ const Perfil = (props) => {
                   </button>
                 </Link>
               </div>
-              {logedUser.id && (
+              {logedUser.id==pId && (
                 <div className="col-span-3 justify-center py-5">
                   <button className="cursor-pointer  hover:scale-110">
                     <label htmlFor="my-modal-3">
@@ -222,7 +234,7 @@ const Perfil = (props) => {
           </div>
         </div>
       </div>
-
+      <div></div>
       <div className="">
         <div className="flex flex-auto justify-center gap-1 sm:gap-x-20">
           <div className="col-span-2  justify-center  py-5">
@@ -260,7 +272,7 @@ const Perfil = (props) => {
               />
             </label>
           </div>
-          {logedUser.id==pId && (
+          {logedUser.id == pId && (
             <>
               <div className="col-span-2 justify-center py-5">
                 <input
@@ -284,11 +296,11 @@ const Perfil = (props) => {
         </div>
       </div>
       {/* Publicaciones  */}
-      <div className="grid grid-cols-3  gap-5 text-center mx-4 my-4">
+      <div className="flex flex1 content-end gap-5 mx-4 my-4">
         {thePage.pageActually == "pagePlaces" &&
           thePlaces.map((aPlace) => {
             return (
-              <div key={aPlace.id}>
+              <div key={aPlace.id} style={{ width: "150px", height: "150px" }}>
                 <label
                   onClick={() => {
                     setModalPlace(aPlace);
@@ -298,11 +310,15 @@ const Perfil = (props) => {
                 >
                   <div className="col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl ">
                     <figure>
-                      <img
-                        className="card"
-                        src={aPlace.images[0].url}
-                        alt="Shoes"
-                      />
+                      {aPlace.images[0] &&
+                      aPlace.images[0].url != "undefined" ? (
+                        <img src={aPlace.images[0].url} className="card" />
+                      ) : (
+                        <img
+                          src={"https://via.placeholder.com/150"}
+                          className="card"
+                        />
+                      )}
                     </figure>
                   </div>
                 </label>
@@ -310,10 +326,32 @@ const Perfil = (props) => {
               </div>
             );
           })}
+        {thePage.pageActually == "pageEvents" &&
+          theEvents.map((aEvent) => (
+            <div key={aEvent.id} style={{ width: "150px", height: "150px" }}>
+              <h1 className="event-detail-title">{aEvent.name}</h1>
+              <label
+                onClick={() => changeModalEvent(aEvent)}
+                htmlFor="my-modal-5"
+              >
+                {aEvent.images[0] && aEvent.images[0].url != "undefined" ? (
+                  <img
+                    src={aEvent.images[0].url}
+                    className="event-detail-image"
+                  />
+                ) : (
+                  <img
+                    src={"https://via.placeholder.com/150"}
+                    className="event-detail-image"
+                  />
+                )}
+              </label>
+            </div>
+          ))}
         {logedUser.id == pId &&
           thePage.pageActually == "pageFavorites" &&
           savePubs.map((aFav) => (
-            <div key={aFav.id}>
+            <div key={aFav.id} style={{ width: "150px", height: "150px" }}>
               <label
                 onClick={() => {
                   aFav.placeId ? setModalEvent(aFav) : setModalPlace(aFav);
@@ -346,13 +384,13 @@ const Perfil = (props) => {
             >
               ✕
             </label>
-            {modalPlace &&
-            <DetailsPlaces
-              events={filterEvents}
-              place={modalPlace}
-              isOpen={isOpen}
-            />
-          }
+            {modalPlace && (
+              <DetailsPlaces
+                events={filterEvents}
+                place={modalPlace}
+                isOpen={isOpen}
+              />
+            )}
           </div>
         </div>
         <input type="checkbox" id="my-modal-5" className="modal-toggle" />

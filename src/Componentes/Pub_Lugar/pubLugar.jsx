@@ -6,24 +6,26 @@ import { BiMessageRounded } from "react-icons/bi";
 import { getAUser } from "../../api";
 import { getAPlace, addFavorite } from "../../api";
 import { LoginContext } from "../../context/Login";
+import Comment from "../Comment/Comment";
 
 const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
   const { logedUser } = useContext(LoginContext);
   const [theUser, setTheUser] = useState({});
+  const [isOpenComment, setIsOpenComment] = useState(false);
 
-  const saveFavorite=async()=>{
-    try{
-    const favorite={
-      userId:logedUser.id,
-      placeId:place.id,
-      eventId:null
-    }
-    const response= await addFavorite(favorite)
-    console.log(response);
-    }catch(err){
+  const saveFavorite = async () => {
+    try {
+      const favorite = {
+        userId: logedUser.id,
+        placeId: place.id,
+        eventId: null,
+      };
+      const response = await addFavorite(favorite);
+      console.log(response);
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const searchTheUser = async (pId) => {
     const response = await getAUser(pId);
@@ -75,20 +77,19 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
               >
                 {logedUser.id ? (
                   <>
-                    <li><button onClick={()=>saveFavorite()}>Guardar</button></li>
-                    {logedUser.id == place.userId?
-                    <>
-                      <li>Editar</li>
-                      <li>Borrar</li>
-                    </>: null
-                    }
+                    <li>
+                      <button onClick={() => saveFavorite()}>Guardar</button>
+                    </li>
+                    {logedUser.id == place.userId ? (
+                      <>
+                        <li>Editar</li>
+                        <li>Borrar</li>
+                      </>
+                    ) : null}
                   </>
                 ) : (
                   <>
-                    <Link
-                      to={`/login`}
-                      className="justify-between"
-                    >
+                    <Link to={`/login`} className="justify-between">
                       <li>Guardar</li>
                     </Link>
                   </>
@@ -111,7 +112,33 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
         </div>
         <div className="place-footer">
           <div className="place-footer-comments">
+          <label
+                onClick={() => setIsOpenComment(!isOpenComment)}
+                htmlFor="my-modal-comment"
+              >
             <BiMessageRounded />
+            </label>
+            
+              <>
+                <input
+                  type="checkbox"
+                  id="my-modal-comment"
+                  className="modal-toggle"
+                />
+                <div className="modal ">
+                  <div className="modal-box relative border-2 border-info">
+                    <label
+                      onClick={() => setIsOpenComment(!isOpenComment)}
+                      htmlFor="my-modal-comment"
+                      className="btn btn-sm btn-circle absolute right-2 top-2"
+                    >
+                      ✕
+                    </label>
+                    <Comment />
+                  </div>
+                </div>
+              </>
+            
           </div>
           <div className="place-rating-global">
             <div className="rating">
