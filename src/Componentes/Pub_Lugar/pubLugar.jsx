@@ -3,8 +3,8 @@ import "../Pub_Lugar/pubLugar.css";
 import { Link } from "react-router-dom";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiMessageRounded } from "react-icons/bi";
-import { getAUser } from "../../api";
-import { getAPlace, addFavorite } from "../../api";
+import { getAUser, deletePlace } from "../../api";
+import { getAPlace, addFavorite, getAllComments} from "../../api";
 import { LoginContext } from "../../context/Login";
 import Comment from "../Comment/Comment";
 
@@ -12,6 +12,20 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
   const { logedUser } = useContext(LoginContext);
   const [theUser, setTheUser] = useState({});
   const [isOpenComment, setIsOpenComment] = useState(false);
+  const [filterComments, setFilterComments]=useState([]);
+
+  const chargeComments=async()=>{
+    const response= await getAllComments();
+    
+    let arrayFilter=[];
+    response.data.map((aComment)=>{
+      if(aComment.placeId==place.id){
+        arrayFilter.push(aComment)
+      }
+    })
+
+    setFilterComments(arrayFilter)
+  }
 
   const saveFavorite = async () => {
     try {
@@ -27,14 +41,20 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
     }
   };
 
+  const deleteAPlace=async(pId)=>{
+    let respuest=window.confirm("Esta seguro de borrar?");
+    if(respuest){
+      const response=await deletePlace(pId);
+      if(response.status==200)
+        alert("Se elimino!")
+      else
+        alert("Algo salio mal!")
+    }
+  }
+
   const searchTheUser = async (pId) => {
     const response = await getAUser(pId);
     setTheUser(response.data);
-  };
-
-  const getThePlace = async (pId) => {
-    const response = await getAPlace(pId);
-    setModalPlace(response.data);
   };
 
   useEffect(() => {
@@ -47,10 +67,8 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
       searchTheUser(place.userId)
         .then()
         .catch((err) => console.log(err));
-      getThePlace(1)
-        .then()
-        .catch((err) => console.log(err));
     }
+    chargeComments().then().catch((err)=>console.log(err))
   }, []);
 
   return (
@@ -82,8 +100,8 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
                     </li>
                     {logedUser.id == place.userId ? (
                       <>
-                        <li>Editar</li>
-                        <li>Borrar</li>
+                        <li><button>Editar</button></li>
+                        <li><button onClick={()=>deleteAPlace(place.id)}>Borrar</button></li>
                       </>
                     ) : null}
                   </>
@@ -99,6 +117,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
           </div>
         </div>
         <div className="place-datos">
+        <hr />
           <h1 className="place-title">{place.name}</h1>
           <label
             onClick={() => {
@@ -125,7 +144,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
                   id="my-modal-comment"
                   className="modal-toggle"
                 />
-                <div className="modal ">
+                <div className="modal " style={{zIndex:10001}}>
                   <div className="modal-box relative border-2 border-info">
                     <label
                       onClick={() => setIsOpenComment(!isOpenComment)}
@@ -134,7 +153,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
                     >
                       ✕
                     </label>
-                    <Comment />
+                    <Comment listComments={filterComments}/>
                   </div>
                 </div>
               </>

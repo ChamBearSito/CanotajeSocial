@@ -102,7 +102,7 @@ const RellenoModalEvento = () => {
               onChange={onAddEvent} />
             <datalist id="brow">
               {thePlaces && thePlaces.map((aPlace)=>(
-                <option value={aPlace.id} >{aPlace.name} | {aPlace.location}</option>
+                <option key={aPlace.id} value={aPlace.id} >{aPlace.name} | {aPlace.location}</option>
               ))}
             </datalist>
             <div className="mt-6">

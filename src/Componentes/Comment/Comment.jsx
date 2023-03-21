@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import Pub_Review from '../Pub_Review/pubReview'
 
-const Comment = ({ onComment }) => {
+const Comment = ({ onComment,listComments }) => {
   const [comment, setComment] = useState("");
+  const [theComments,setTheComments]=useState(listComments)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,8 +12,8 @@ const Comment = ({ onComment }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div style={{position:"relative",zIndex:10002}}>
+      <form onSubmit={handleSubmit} style={{color:"#fff",}}>
         <label>
           {" "}
           <h1>Add a comment</h1>
@@ -32,7 +34,11 @@ const Comment = ({ onComment }) => {
           </button>
         </div>
       </form>
-      <>{/*lista de comentarios*/}</>
+      <div>
+        {listComments.map((aComment)=>(
+          <Pub_Review comment={aComment}/>
+        ))}
+      </div>
     </div>
   );
 };

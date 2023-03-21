@@ -14,13 +14,11 @@
     height: 17%;
     margin:10px 15px;
     width:100%;
-    border:2px solid blue;
 }
 
 .place-header-perfil{
     display: flex;
     align-items: center;
-    border: 2px solid #000;
     min-width:50%;
     min-height: 100%;
     padding:5px;
@@ -39,14 +37,13 @@
     flex-grow: 0;
     background-color: #ababab;
     height: 100%;
-    border-radius: 50%;
     margin-right: 10px;
+    border-radius: 45%;
 }
 
 .place-header-options{
     height: 100%;
     width: 20%;
-    border: 2px solid red;
     position: absolute;
     right: 0;
     display: flex;
@@ -64,7 +61,6 @@
 .place-header-options li:hover{
     cursor: pointer;
     background-color: #ababab;
-    border-radius: 30px;
     padding-left: 15px;
     color:#102f51;
 }
@@ -72,7 +68,6 @@
 /* PLACE DATOS */
 
 .place-datos{
-    border:1px solid aqua;
     height: 60%;
     margin: 10px 10px;
     width: 100%;
@@ -86,12 +81,10 @@
     width: 100%;
     height: 20%;
     font-size: 20px;
-    border: 1px solid #000;
 }
 
 .place-image{
     cursor: pointer;
-    border: 1px solid #000;
     width: 100%;
     height: 80%;
     object-fit: cover;
@@ -104,7 +97,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    border:1px solid aqua;
     height: 10%;
     width: 100%;
     margin:0 10px 10px;
@@ -124,7 +116,6 @@
     display: flex;
     padding:4px;
     overflow:scroll;
-    border:1px solid #000;
     height: 100%;
     width: max(50%);
 }

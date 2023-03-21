@@ -94,6 +94,17 @@ const createPlace = async (aPlace) => {
   }
 };
 
+const deletePlace = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/places/delete/${pId}`, {
+      method: "DELETE",
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on deletePlace", error);
+  }
+};
+
 const createEvent = async (aEvent) => {
   try {
     const response = await fetch(`${URL}/events/add`, {
@@ -213,5 +224,6 @@ export {
   deleteFavorite,
   createEvent,
   getAllComments,
-  createComment
+  createComment,
+  deletePlace
 };

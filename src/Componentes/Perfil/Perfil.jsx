@@ -296,7 +296,7 @@ const Perfil = (props) => {
         </div>
       </div>
       {/* Publicaciones  */}
-      <div className="flex flex1 content-end gap-5 mx-4 my-4">
+      <div className="flex flex1 flex-wrap content-end gap-5 mx-4 my-4">
         {thePage.pageActually == "pagePlaces" &&
           thePlaces.map((aPlace) => {
             return (

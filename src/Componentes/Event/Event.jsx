@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import fotoano from "../../assets/img/perfil1.jpg";
 
-import { getAPlace, getAUser, addFavorite } from "../../api";
+import { getAPlace, getAUser, addFavorite, getAllComments } from "../../api";
 import { FaRegComment } from "react-icons/fa";
 import { BsFillBookmarkStarFill } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
@@ -13,13 +13,25 @@ const Event = ({ theEvent }) => {
   const { logedUser } = useContext(LoginContext);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
-  const [isOpen3, setIsOpen3] = useState(false);
-  const [isOpen4, setIsOpen4] = useState(false);
   const [placeXEvent, setPlaceXEvent] = useState({});
   const [userXEvent, setUserXEvent] = useState({
     name: "The",
     lastName: "Anonimous",
   });
+  const [filterComments, setFilterComments]=useState([]);
+
+  const chargeComments=async()=>{
+    const response= await getAllComments();
+    
+    let arrayFilter=[];
+    response.data.map((aComment)=>{
+      if(aComment.placeId==theEvent.id){
+        arrayFilter.push(aComment)
+      }
+    })
+
+    setFilterComments(arrayFilter)
+  }
 
   const saveFavorite = async () => {
     try {
@@ -54,6 +66,7 @@ const Event = ({ theEvent }) => {
     getUserXEvent()
       .then()
       .catch((err) => console.log(err));
+    chargeComments().then().catch((err)=>console.log(err))
   }, []);
 
   return (
@@ -63,14 +76,14 @@ const Event = ({ theEvent }) => {
           <div className="flex items-center px-4 py-3">
             <img className="h-16 w-16 rounded-full" src={fotoano} />
             <div className="ml-3 ">
-              <span className="text-sm font-semibold antialiased block leading-tight">
+              <span className="text-sm font-semibold antialiased block leading-tight w-20">
                 {userXEvent.name} {userXEvent.lastName}
               </span>
               <span className="text-gray-600 text-xs block">
-                {placeXEvent.location}{" "}
+                {placeXEvent && placeXEvent.location}
               </span>
             </div>
-            <div className=" ml-5 sm:ml-44">
+            <div className=" ml-5 absolute right-5">
               {/* Para Favotiros */}
               <button onClick={() => saveFavorite()} className="cursor-pointer">
                 <BsFillBookmarkStarFill fill="gold" size={30} />
@@ -82,17 +95,17 @@ const Event = ({ theEvent }) => {
           <div className="text-center">
             <h1>{theEvent.name}</h1>
           </div>
-          {theEvent.images[0] ? (
+          {theEvent.images[0] ? 
             <img src={theEvent.images[0].url} />
-          ) : (
+           : 
             <img src={"https://via.placeholder.com/150"} />
-          )}
+          }
           <div className="flex flex-wrap gap-5 items-center justify-between mx-4 mt-3 mb-2">
             {/* LA DESCRIPCION */}
-            <div>
+            <div className={isOpen?"w-full":""}>
               {/* El encabezado del acordeón */}
               <button
-                className="flex  w-full px-4 py-2  font-bold  input input-bordered btn input-info"
+                className="flex w-full px-4 py-2  font-bold  input input-bordered btn input-info"
                 onClick={() => setIsOpen(!isOpen)}
               >
                 {" "}
@@ -147,7 +160,7 @@ const Event = ({ theEvent }) => {
               >
                 ✕
               </label>
-              <Comment />
+              <Comment listComments={filterComments}/>
             </div>
           </div>
           <input type="checkbox" id="my-modal-6" className="modal-toggle" />

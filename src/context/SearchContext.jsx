@@ -8,7 +8,7 @@ const SearchProvider = (props) => {
 
     const searchFilters=async(textFilter)=>{
         const response = await filterPlaces(textFilter);
-        setPlacesFilter(response.data)
+        setPlacesFilter(response.data.reverse())
     }
 
     return (
