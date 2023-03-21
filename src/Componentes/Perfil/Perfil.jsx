@@ -363,11 +363,17 @@ const Perfil = (props) => {
               >
                 <div className="col-span-3 sm:col-span-1 card border-4 border-black cursor-pointer bg-base-100 shadow-xl ">
                   <figure>
-                    <img
-                      className="card"
-                      src={aFav.images[0].url}
-                      alt="Shoes"
-                    />
+                  {aFav.images[0] && aFav.images[0].url != "undefined" ? (
+                  <img
+                    src={aFav.images[0].url}
+                    className="event-detail-image"
+                  />
+                ) : (
+                  <img
+                    src={"https://via.placeholder.com/150"}
+                    className="event-detail-image"
+                  />
+                )}
                   </figure>
                 </div>
               </label>

@@ -32,6 +32,7 @@ const Comment = ({ onComment }) => {
           </button>
         </div>
       </form>
+      <>{/*lista de comentarios*/}</>
     </div>
   );
 };

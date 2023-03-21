@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import { getAllPlaces, getAllEvents } from "../../api";
 import PubLugar from "../Pub_Lugar/pubLugar";
+import Event from '../Event/Event'
 import { getAPlace } from "../../api";
 import DetailsPlaces from "../ParaDetailplace/DetailsPlaces";
 import { SearchContext } from "../../context/SearchContext";
 
-const FeedPlaces = ({thePlaces, setThePlaces}) => {
+const FeedPlaces = ({
+  thePlaces,
+  setThePlaces,
+  turnShowEvents,
+  theEvents,
+  setTheEvents,
+}) => {
   const { placesFilter } = useContext(SearchContext);
 
   const [modalPlace, setModalPlace] = useState({});
   const [isOpen, setIsOpen] = useState(false);
-  const [theEvents, setTheEvents] = useState([]);
- 
+
   const [filterEvents, setFilterEvents] = useState([]);
 
   const filterEventsArray = () => {
@@ -28,17 +34,7 @@ const FeedPlaces = ({thePlaces, setThePlaces}) => {
     filterEventsArray();
   }, [isOpen]);
 
-  const getEvents = async () => {
-    const response = await getAllEvents();
-    setTheEvents(response.data);
-  };
-
-  useEffect(() => {
-    
-    getEvents()
-      .then()
-      .catch((err) => console.log(err));
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     setThePlaces(placesFilter);
@@ -53,19 +49,30 @@ const FeedPlaces = ({thePlaces, setThePlaces}) => {
   };
   return (
     <>
-    {thePlaces &&
-      <div style={mystyle}>
-        {thePlaces.map((aPlace) => (
-          <PubLugar
-            key={aPlace.id}
-            place={aPlace}
-            isOpen={isOpen}
-            setModalPlace={setModalPlace}
-            setIsOpen={setIsOpen}
-          />
-        ))}
-      </div>
-      }
+      {thePlaces && turnShowEvents == false && (
+        <div style={mystyle}>
+          {thePlaces.map((aPlace) => (
+            <PubLugar
+              key={aPlace.id}
+              place={aPlace}
+              isOpen={isOpen}
+              setModalPlace={setModalPlace}
+              setIsOpen={setIsOpen}
+            />
+          ))}
+        </div>
+      )}
+      {theEvents && turnShowEvents == true && (
+        <div style={mystyle}>
+          {theEvents.map((aEvent) => (
+            <Event
+              key={aEvent.id}
+              theEvent={aEvent}
+            />
+          ))}
+        </div>
+      )}
+
       {isOpen && (
         <>
           <input type="checkbox" id="my-modal-5" className="modal-toggle" />
