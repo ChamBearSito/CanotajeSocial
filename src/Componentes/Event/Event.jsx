@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import fotoano from "../../assets/img/perfil1.jpg";
+import foto from "../../assets/img/perfil1.jpg";
 
 import { getAPlace, getAUser, addFavorite, getAllComments, deleteEvent } from "../../api";
 import { FaRegComment } from "react-icons/fa";
@@ -10,21 +10,33 @@ import Comment from "../Comment/Comment";
 import Review from "../Review/Review";
 import { LoginContext } from "../../context/Login";
 
+//Traemos el TheEvent
 const Event = ({ theEvent }) => {
+  //Traemos el logedUser de su Context
   const { logedUser } = useContext(LoginContext);
   //Acordiones
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   //
 
+
+  // estado para abrir Boton de Editar o Borrar
   const [editarborrar, seteditarborrar] = useState(false)
+
+  //estado para el Evento de xPlace
   const [placeXEvent, setPlaceXEvent] = useState({});
+
+  //estado que es un objeto para el UserxEvent
   const [userXEvent, setUserXEvent] = useState({
     name: "The",
     lastName: "Anonimous",
   });
+
+  //estado para filtrar los comments
   const [filterComments, setFilterComments]=useState([]);
 
+  // llamamos a la funcion de la api de getAllComents, cramos un arrayFiltrer, entonces por cada comentario
+  //si el comentario.placeId es igual al theEvent.id entonces que a ese comentario lo guarde en el array
   const chargeComments=async()=>{
     const response= await getAllComments();
     
@@ -34,10 +46,11 @@ const Event = ({ theEvent }) => {
         arrayFilter.push(aComment)
       }
     })
-
+      // seteamos el filtrerComent y lo cargamos con el array
     setFilterComments(arrayFilter)
   }
 
+  //creamos favorite con UserId,placeIdm y EventId, luego llamamos a la api para agregar favorito
   const saveFavorite = async () => {
     try {
       const favorite = {
@@ -52,11 +65,13 @@ const Event = ({ theEvent }) => {
     }
   };
 
+  // Obtenemos el Place mandandole el placeId, y seteamos el PlaceXEvent con la respuesta
   const getPlaceXEvent = async () => {
     const response = await getAPlace(theEvent.placeId);
     setPlaceXEvent(response.data);
   };
 
+  // Si el userId de TheEvent es distinto a Nulll entonces llame a la api y setie la respuesta
   const getUserXEvent = async () => {
     if (theEvent.userId != null) {
       const response = await getAUser(theEvent.userId);
@@ -76,11 +91,13 @@ const Event = ({ theEvent }) => {
     }
   }
 
-
+//Para hacer bajar opciones al hacer click
   const toggleDropdown = () => {
     seteditarborrar(!editarborrar);
   }
 
+  //Cada vez que se Monte el componente que llame a las funciones de getPlaceXEvent, getUserXEvent(), chargeComments()
+  //y si hay algun error que lo muyestre
   useEffect(() => {
     getPlaceXEvent()
       .then()
@@ -96,7 +113,7 @@ const Event = ({ theEvent }) => {
       <div className=" p-4 ">
         <div className="bg-white card rounded-xl max-w-md border-2 border-info">
           <div className="flex items-center px-4 py-3">
-            <img className="h-16 w-16 rounded-full" src={fotoano} />
+            <img className="h-16 w-16 rounded-full" src={foto} />
             <div className="ml-3 ">
               <span className="text-sm font-semibold antialiased block leading-tight w-20">
                 {userXEvent.name} {userXEvent.lastName}

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Pub_Review from '../Pub_Review/pubReview'
 
+//recibimos el onComent y la lista de Comentarios 
 const Comment = ({ onComment,listComments }) => {
-  const [comment, setComment] = useState("");
-  const [theComments,setTheComments]=useState(listComments)
+  const [comment, setComment] = useState("");//Estado para comentario
+  const [theComments,setTheComments]=useState(listComments)//Estado Para Lista de Cometrarios y le asignamos la lista
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,6 +36,7 @@ const Comment = ({ onComment,listComments }) => {
         </div>
       </form>
       <div>
+        {/* Recorremos la lista y por cada uno creamos Pub_Review */}
         {listComments.map((aComment)=>(
           <Pub_Review comment={aComment}/>
         ))}
