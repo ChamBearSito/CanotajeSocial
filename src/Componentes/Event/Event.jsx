@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import fotoano from "../../assets/img/perfil1.jpg";
 
-import { getAPlace, getAUser, addFavorite, getAllComments } from "../../api";
+import { getAPlace, getAUser, addFavorite, getAllComments, deleteEvent } from "../../api";
 import { FaRegComment } from "react-icons/fa";
 import { BsFillBookmarkStarFill } from "react-icons/bs";
+import { BsFillArrowDownCircleFill } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
 import Comment from "../Comment/Comment";
 import Review from "../Review/Review";
@@ -11,8 +12,12 @@ import { LoginContext } from "../../context/Login";
 
 const Event = ({ theEvent }) => {
   const { logedUser } = useContext(LoginContext);
+  //Acordiones
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+  //
+
+  const [editarborrar, seteditarborrar] = useState(false)
   const [placeXEvent, setPlaceXEvent] = useState({});
   const [userXEvent, setUserXEvent] = useState({
     name: "The",
@@ -59,6 +64,23 @@ const Event = ({ theEvent }) => {
     }
   };
 
+
+  const deleteAEvent=async(pId)=>{
+    let respuest=window.confirm("Esta seguro de borrar?");
+    if(respuest){
+      const response=await deleteEvent(pId);
+      if(response.status==200)
+        alert("Se elimino!")
+      else
+        alert("Algo salio mal!")
+    }
+  }
+
+
+  const toggleDropdown = () => {
+    seteditarborrar(!editarborrar);
+  }
+
   useEffect(() => {
     getPlaceXEvent()
       .then()
@@ -88,7 +110,24 @@ const Event = ({ theEvent }) => {
               <button onClick={() => saveFavorite()} className="cursor-pointer">
                 <BsFillBookmarkStarFill fill="gold" size={30} />
               </button>
+              <button onClick={toggleDropdown}>
+                <BsFillArrowDownCircleFill size={30}/>
+                {
+                  editarborrar && (
+                    <div>
+
+                    <ul tabIndex={0} style={{zIndex:10001}} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                      <li className="justify-between">Editar</li>
+                      <li className="justify-between">Borrar</li>
+                    </ul>
+                      
+                    </div>
+                  )
+                }
+              </button>
+              
             </div>
+           
           </div>
 
           <hr />

@@ -183,6 +183,18 @@ const getAllEventsForUser = async (pId) => {
   }
 };
 
+
+const deleteEvent = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/events/delete/${pId}`, {
+      method: "DELETE",
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on deleteEvent", error);
+  }
+};
+
 const getAllComments = async()=>{
   try {
     const response = await fetch(`${URL}/comments`);
@@ -225,5 +237,6 @@ export {
   createEvent,
   getAllComments,
   createComment,
-  deletePlace
+  deletePlace,
+  deleteEvent
 };
