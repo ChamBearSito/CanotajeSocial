@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { createPlace } from "../../api";
 import { LoginContext } from "../../context/Login";
 
+
+
 const RellenoModal = ({thePlaces, setThePlaces}) => {
   const [selected, setSelected] = useState("");
   const { logedUser } = useContext(LoginContext);

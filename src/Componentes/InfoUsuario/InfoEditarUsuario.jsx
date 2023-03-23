@@ -56,13 +56,7 @@ const InfoEditarUsuario = () => {
             }
 
 
-            const cambioImagen = () =>{
-                const laInfo= JSON.parse(localStorage.getItem("info"));
-                const URLIMAGEN = laInfo.url
-                (URLIMAGEN  != "")? 
-                document.getElementById("fotoperfil").src={URLIMAGEN}:
-                document.getElementById("fotoperfil").src={Walter};
-            }
+         
 
   return (
     <>

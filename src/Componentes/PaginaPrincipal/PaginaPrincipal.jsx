@@ -19,6 +19,7 @@ const PaginaPrincipal = () => {
   const [theEvents, setTheEvents] = useState([]);
   const [showEvents, setShowEvents] = useState(false);
 
+  //Seteamos los estados inicializados como array para mandarle todos los places y events
   const getThePlaces = async () => {
     const response = await getAllPlaces();
     setThePlaces(response.data.reverse());
