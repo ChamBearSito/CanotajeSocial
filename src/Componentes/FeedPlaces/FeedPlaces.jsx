@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getAllPlaces, getAllEvents } from "../../api";
+import { getAllPlaces, getAllEvents, getAllComments } from "../../api";
 import PubLugar from "../Pub_Lugar/pubLugar";
 import Event from '../Event/Event'
-import { getAPlace } from "../../api";
+import { getAPlace, getAUser } from "../../api";
 import DetailsPlaces from "../ParaDetailplace/DetailsPlaces";
 import { SearchContext } from "../../context/SearchContext";
+import { render } from "react-dom";
 
 const FeedPlaces = ({
   thePlaces,
@@ -13,6 +14,28 @@ const FeedPlaces = ({
   theEvents,
   setTheEvents,
 }) => {
+  const [theComments, setTheComments]=useState([]);
+  const [commentCharged, setCommentCharged]=useState([])
+  
+  const getAllComents=async()=>{
+    const response = await getAllComments();
+    setTheComments(response.data)
+  }
+
+  const chargeComments = (eventId) => {
+    let arrayFilter = [];
+    
+    theComments.map((aComment) => {
+      if (aComment.eventId == eventId) {
+        const myComment={
+          comment:aComment
+        }
+        arrayFilter.push(myComment);
+      }
+    });
+    // seteamos el filtrerComent y lo cargamos con el array
+    setCommentCharged(arrayFilter);
+  };
 
   // Recibimos PlacesFiltrer de su Contexto
   const { placesFilter } = useContext(SearchContext);
@@ -25,7 +48,6 @@ const FeedPlaces = ({
   //Creamos Filtro inicializandolo como Array para guardar eventos
   const [filterEvents, setFilterEvents] = useState([]);
 
-
   //creamos un array para guardar los eventos filtrados,recorremos theEvents  y si aEvent.place.Id es igual a
   // el modalPlace.id entonces que ese evento se guarde en el array, luego seteamos ese array al filtrer Events
   const filterEventsArray = () => {
@@ -37,12 +59,16 @@ const FeedPlaces = ({
     });
     setFilterEvents(eventFilterArray);
   };
+
+  useEffect(()=>{
+    getAllComents().then().catch((err)=>console.log(err))
+  },[])
+
 //cada vez que cambie e IsOpen se LLama al filtrador
   useEffect(() => {
     filterEventsArray();
   }, [isOpen]);
 
-  useEffect(() => {}, []);
 //cada vez que cambie el PlacesFiltrer se setea Nuevamente el The places y le enviamos el placesFiltrer
   useEffect(() => {
     setThePlaces(placesFilter);
@@ -72,16 +98,22 @@ const FeedPlaces = ({
         </div>
       )}
        {/* si ThePlces Exite  y turnShowEvents es true entonces por cada evento muestre el evento */}
-      {theEvents && turnShowEvents == true && (
+      {theEvents && turnShowEvents == true && 
         <div style={mystyle}>
-          {theEvents.map((aEvent) => (
+          {theEvents.map((aEvent) => 
+            (
+            <>
             <Event
               key={aEvent.id}
               theEvent={aEvent}
+              chargeComments={chargeComments}
+              theComments={commentCharged}
             />
-          ))}
+            </>
+          )
+          )}
         </div>
-      )}
+      }
 
       {isOpen && (
         <>

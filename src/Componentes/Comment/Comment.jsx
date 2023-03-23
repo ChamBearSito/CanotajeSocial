@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { getAUser } from "../../api";
 import Pub_Review from '../Pub_Review/pubReview'
+import TrueComment from "../TrueComment/TrueComment";
 
 //recibimos el onComent y la lista de Comentarios 
-const Comment = ({ onComment,listComments }) => {
+const Comment = ({ listComments }) => {
   const [comment, setComment] = useState("");//Estado para comentario
-  const [theComments,setTheComments]=useState(listComments)//Estado Para Lista de Cometrarios y le asignamos la lista
+  const [theComments,setTheComments]=useState([])//Estado Para Lista de Cometrarios y le asignamos la lista
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onComment(comment);
-    setComment("");
   };
+
+
 
   return (
     <div style={{position:"relative",zIndex:10002}}>
@@ -35,10 +37,11 @@ const Comment = ({ onComment,listComments }) => {
           </button>
         </div>
       </form>
-      <div>
+      <div className="mt-5">
         {/* Recorremos la lista y por cada uno creamos Pub_Review */}
-        {listComments.map((aComment)=>(
-          <Pub_Review comment={aComment}/>
+        {listComments.map((aComment)=>
+        (
+          <TrueComment key={aComment.comment.id} aComment={aComment}/>
         ))}
       </div>
     </div>

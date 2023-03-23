@@ -138,7 +138,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
             <BiMessageRounded />
             </label>
             
-              <>
+              {/* <>
                 <input
                   type="checkbox"
                   id="my-modal-comment"
@@ -156,7 +156,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
                     <Comment listComments={filterComments}/>
                   </div>
                 </div>
-              </>
+              </> */}
             
           </div>
           <div className="place-rating-global">

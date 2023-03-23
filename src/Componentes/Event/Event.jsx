@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import foto from "../../assets/img/perfil1.jpg";
 
-import { getAPlace, getAUser, addFavorite, getAllComments, deleteEvent } from "../../api";
+import {
+  getAPlace,
+  getAUser,
+  addFavorite,
+  getAllComments,
+  deleteEvent,
+} from "../../api";
 import { FaRegComment } from "react-icons/fa";
 import { BsFillBookmarkStarFill } from "react-icons/bs";
 import { BsFillArrowDownCircleFill } from "react-icons/bs";
@@ -11,17 +17,17 @@ import Review from "../Review/Review";
 import { LoginContext } from "../../context/Login";
 
 //Traemos el TheEvent
-const Event = ({ theEvent }) => {
+const Event = ({ theEvent,theComments,chargeComments }) => {
   //Traemos el logedUser de su Context
   const { logedUser } = useContext(LoginContext);
   //Acordiones
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+  const [isOpenComment, setIsOpenComment] = useState(false);
   //
 
-
   // estado para abrir Boton de Editar o Borrar
-  const [editarborrar, seteditarborrar] = useState(false)
+  const [editarborrar, seteditarborrar] = useState(false);
 
   //estado para el Evento de xPlace
   const [placeXEvent, setPlaceXEvent] = useState({});
@@ -30,25 +36,13 @@ const Event = ({ theEvent }) => {
   const [userXEvent, setUserXEvent] = useState({
     name: "The",
     lastName: "Anonimous",
-  });
-
-  //estado para filtrar los comments
-  const [filterComments, setFilterComments]=useState([]);
+  }); 
 
   // llamamos a la funcion de la api de getAllComents, cramos un arrayFiltrer, entonces por cada comentario
   //si el comentario.placeId es igual al theEvent.id entonces que a ese comentario lo guarde en el array
-  const chargeComments=async()=>{
-    const response= await getAllComments();
-    
-    let arrayFilter=[];
-    response.data.map((aComment)=>{
-      if(aComment.placeId==theEvent.id){
-        arrayFilter.push(aComment)
-      }
-    })
-      // seteamos el filtrerComent y lo cargamos con el array
-    setFilterComments(arrayFilter)
-  }
+
+
+  
 
   //creamos favorite con UserId,placeIdm y EventId, luego llamamos a la api para agregar favorito
   const saveFavorite = async () => {
@@ -79,22 +73,19 @@ const Event = ({ theEvent }) => {
     }
   };
 
-
-  const deleteAEvent=async(pId)=>{
-    let respuest=window.confirm("Esta seguro de borrar?");
-    if(respuest){
-      const response=await deleteEvent(pId);
-      if(response.status==200)
-        alert("Se elimino!")
-      else
-        alert("Algo salio mal!")
+  const deleteAEvent = async (pId) => {
+    let respuest = window.confirm("Esta seguro de borrar?");
+    if (respuest) {
+      const response = await deleteEvent(pId);
+      if (response.status == 200) alert("Se elimino!");
+      else alert("Algo salio mal!");
     }
-  }
+  };
 
-//Para hacer bajar opciones al hacer click
+  //Para hacer bajar opciones al hacer click
   const toggleDropdown = () => {
     seteditarborrar(!editarborrar);
-  }
+  };
 
   //Cada vez que se Monte el componente que llame a las funciones de getPlaceXEvent, getUserXEvent(), chargeComments()
   //y si hay algun error que lo muyestre
@@ -102,10 +93,16 @@ const Event = ({ theEvent }) => {
     getPlaceXEvent()
       .then()
       .catch((err) => console.log(err));
-    getUserXEvent()
-      .then()
-      .catch((err) => console.log(err));
-    chargeComments().then().catch((err)=>console.log(err))
+      if (theEvent.userId == null) {
+        setUserXEvent({
+          name: "The",
+          lastName: "Anonimous",
+        });
+      } else {
+        getUserXEvent(theEvent.userId)
+          .then()
+          .catch((err) => console.log(err));
+      }
   }, []);
 
   return (
@@ -128,37 +125,35 @@ const Event = ({ theEvent }) => {
                 <BsFillBookmarkStarFill fill="gold" size={30} />
               </button>
               <button onClick={toggleDropdown}>
-                <BsFillArrowDownCircleFill size={30}/>
-                {
-                  editarborrar && (
-                    <div>
-
-                    <ul tabIndex={0} style={{zIndex:10001}} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                <BsFillArrowDownCircleFill size={30} />
+                {editarborrar && (
+                  <div>
+                    <ul
+                      tabIndex={0}
+                      style={{ zIndex: 10001 }}
+                      className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+                    >
                       <li className="justify-between">Editar</li>
                       <li className="justify-between">Borrar</li>
                     </ul>
-                      
-                    </div>
-                  )
-                }
+                  </div>
+                )}
               </button>
-              
             </div>
-           
           </div>
 
           <hr />
           <div className="text-center">
             <h1>{theEvent.name}</h1>
           </div>
-          {theEvent.images[0] ? 
+          {theEvent.images[0] ? (
             <img src={theEvent.images[0].url} />
-           : 
+          ) : (
             <img src={"https://via.placeholder.com/150"} />
-          }
+          )}
           <div className="flex flex-wrap gap-5 items-center justify-between mx-4 mt-3 mb-2">
             {/* LA DESCRIPCION */}
-            <div className={isOpen?"w-full":""}>
+            <div className={isOpen ? "w-full" : ""}>
               {/* El encabezado del acordeón */}
               <button
                 className="flex w-full px-4 py-2  font-bold  input input-bordered btn input-info"
@@ -201,24 +196,32 @@ const Event = ({ theEvent }) => {
             </div>
 
             <div className="mx-auto ">
-              <label htmlFor="my-modal-5" className="cursor-pointer">
+              <label
+                htmlFor="my-modal-5"
+                onClick={() => {chargeComments(theEvent.id)
+                  setIsOpenComment(!isOpenComment)}}
+                className="cursor-pointer"
+              >
                 <FaRegComment fill="black" size={40} />
               </label>
             </div>
-          </div>
-
-          <input type="checkbox" id="my-modal-5" className="modal-toggle" />
-          <div className="modal">
-            <div className="modal-box relative w-fit border-2 border-info">
-              <label
-                htmlFor="my-modal-5"
-                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
-              >
-                ✕
-              </label>
-              <Comment listComments={filterComments}/>
-            </div>
-          </div>
+          </div> 
+          {isOpenComment && 
+            <>
+              <input type="checkbox" id="my-modal-5" className="modal-toggle" />
+              <div className="modal">
+                <div className="modal-box relative w-fit border-2 border-info">
+                  <label
+                    htmlFor="my-modal-5"
+                    className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+                  >
+                    ✕
+                  </label>
+                  <Comment key={theEvent.id} listComments={theComments} />
+                </div>
+              </div>
+            </>
+          }
           <input type="checkbox" id="my-modal-6" className="modal-toggle" />
           <div className="modal">
             <div className="modal-box relative w-fit border-2 border-info">

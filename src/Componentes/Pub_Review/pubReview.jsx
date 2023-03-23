@@ -2,27 +2,30 @@ import React, { useEffect, useState } from "react";
 import "../Pub_Review/pubReview.css";
 import { getAUser, getAPlace, getAEvent } from "../../api";
 
-const PubReview = (comment) => {
+const PubReview = (aComment) => {
   const [dataXComment, setDataXComment] = useState({
-    user: {}
+    name:'The',
+    lastName:'Anonimous'
   });
 
-  const searchDataXComment = async () => {
-    const responseUser = await getAUser(comment.userId);
-
-    setDataXComment({
-      user: responseUser.data,
-    });
+  const searchDataXComment = async (pId) => {
+    
+    if(aComment.aComment.userId){  
+      const responseUser = await getAUser(pId);
+      setDataXComment(responseUser.data);
+    }
+    
   };
 
   useEffect(()=>{
-    searchDataXComment();
+    searchDataXComment(aComment.aComment.userId);
+    console.log('pubReview',aComment)
   },[])
 
   return (
     <div className="review-container">
-      <div className="review-profile">{dataXComment.user.name} {dataXComment.user.lastName}</div>
-      <div className="review-content">{comment.comment}</div>
+      <div className="review-profile">{dataXComment.name} {dataXComment.lastName}</div>
+      <div className="review-content">{aComment.aComment.comment}</div>
       <div className="rating">
         <input
           type="radio"
