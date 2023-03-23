@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { getAllPlaces } from "../../api";
 import { LoginContext } from "../../context/Login";
 
-const RellenoModalEvento = () => {
+const RellenoModalEvento = ({setTheEvents,theEvents}) => {
   useEffect(() => {
     const fetchPlaces = async () => {
       const response = await getAllPlaces();
@@ -14,6 +14,7 @@ const RellenoModalEvento = () => {
   }, []);
 
   const {logedUser}=useContext(LoginContext);
+  const [theFile, setTheFile]=useState({});
 
   const [thePlaces,setThePlaces]=useState([]);
   const [event, setEvent] = useState({
@@ -27,20 +28,21 @@ const RellenoModalEvento = () => {
 
   const addEvent = async (pEvent) => {
     const response = await createEvent(pEvent);
-    if(response.status==201)
+    if(response.status==201){
+      const EventsResfresh=[response.data,...theEvents]
+      setTheEvents(EventsResfresh);
       alert("Is susscesfully!");
+    }
   };
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-    addEvent(event)
-      .then()
-      .catch((err) => console.log(err));
+    upload(theFile)
+    console.log(theFile)
   };
 
   const onAddEvent = (e) => {
     e.preventDefault();
-    console.log(event);
     const value = e.target.value;
     const element = e.target.id;
     setEvent({ ...event, [element]: value });
@@ -60,7 +62,10 @@ const RellenoModalEvento = () => {
     const data3 = await response.json();
     
     setEvent({ ...event, images: [{ url: `${data3.secure_url}` }] }); // reemplazar con un mensaje de éxito o la acción deseada
-    console.log(event)
+    
+    addEvent(event)
+      .then()
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -122,8 +127,8 @@ const RellenoModalEvento = () => {
             <input
               type="file"
               className="file-input file-input-bordered file-input-primary w-full max-w-xs" 
-              onChange={(e)=>upload(e.target.files[0])} 
               id="image"
+              onChange={(e)=>{setTheFile(e.target.files[0])}}
             />
           </div>
         </div>
@@ -134,11 +139,11 @@ const RellenoModalEvento = () => {
           <div className="col-span-1 sm:text-end text-center">
             <button
               type="submit"
-              htmlFor="my-modal-3"
+              htmlFor="my-modal-4"
               id="my-modal-3"
               className="inline-flex btn btn-info w-20 text-end mt-4 rounded-md py-2 px-3 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
-              <label htmlFor="my-modal-3">Publicar</label>
+              <label htmlFor="my-modal-4">Publicar</label>
             </button>
           </div>
         </div>

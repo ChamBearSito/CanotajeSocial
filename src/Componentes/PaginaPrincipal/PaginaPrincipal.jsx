@@ -99,6 +99,8 @@ const PaginaPrincipal = () => {
                 </label>
                 <RellenoModalEvento
                   thePlaces={thePlaces}
+                  theEvents={theEvents}
+                  setTheEvents={setTheEvents}
                   setThePlaces={setThePlaces}
                 />
               </div>
@@ -110,7 +112,7 @@ const PaginaPrincipal = () => {
           thePlaces={thePlaces}
           setThePlaces={setThePlaces}
           theEvents={theEvents}
-          setTheEvents={setTheEvents}
+          getTheEvents={getTheEvents}
         />
       </Layout>
     </>

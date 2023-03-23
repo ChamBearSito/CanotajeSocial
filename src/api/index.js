@@ -2,7 +2,6 @@ const URL = "http://ec2-44-200-15-255.compute-1.amazonaws.com:4000";
 
 const addRegister = async (aUser) => {
   try {
-    console.log(aUser)
     const response = await fetch(`${URL}/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -15,6 +14,23 @@ const addRegister = async (aUser) => {
     return await response.json();
   } catch (error) {
     console.log("error on addRegister", error);
+  }
+};
+
+const addComment = async (aComment) => {
+  try {
+    const response = await fetch(`${URL}/comments/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+          {
+          ...aComment
+        }
+      ),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on addComment", error);
   }
 };
 
@@ -238,5 +254,6 @@ export {
   getAllComments,
   createComment,
   deletePlace,
-  deleteEvent
+  deleteEvent,
+  addComment
 };

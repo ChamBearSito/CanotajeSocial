@@ -12,7 +12,7 @@ const FeedPlaces = ({
   setThePlaces,
   turnShowEvents,
   theEvents,
-  setTheEvents,
+  getTheEvents
 }) => {
   const [theComments, setTheComments]=useState([]);
   const [commentCharged, setCommentCharged]=useState([])
@@ -22,9 +22,11 @@ const FeedPlaces = ({
     setTheComments(response.data)
   }
 
-  const chargeComments = (eventId) => {
+  const chargeComments = async(eventId,chargeAll) => {
     let arrayFilter = [];
-    
+    if(chargeAll==true){
+      await getAllComents()
+    }
     theComments.map((aComment) => {
       if (aComment.eventId == eventId) {
         const myComment={
@@ -75,14 +77,14 @@ const FeedPlaces = ({
   }, [placesFilter]);
 
   const mystyle = {
-    display: "Flex",
+    display:'Flex',
     justifyContent: "Center",
     gap: "5px",
-    flexWrap: "Wrap",
+    flexWrap:'Wrap',
     padding: "10px",
   };
   return (
-    <>
+    <div>
     {/* si ThePlces Exite  y turnShowEvents es false entonces por cada place genera la Publicacion */}
       {thePlaces && turnShowEvents == false && (
         <div style={mystyle}>
@@ -106,8 +108,10 @@ const FeedPlaces = ({
             <Event
               key={aEvent.id}
               theEvent={aEvent}
+              eventId={aEvent.id}
               chargeComments={chargeComments}
               theComments={commentCharged}
+              getTheEvents={getTheEvents}
             />
             </>
           )
@@ -136,7 +140,7 @@ const FeedPlaces = ({
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 
