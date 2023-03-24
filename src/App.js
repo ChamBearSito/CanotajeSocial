@@ -18,6 +18,7 @@ import Search from './Componentes/Search/Search';
 import { getAllEvents } from './api';
 import Event from './Componentes/Event/Event';
 import DetailEvent from './Componentes/ParaDetailEvent/DetailEvent';
+import Pruebas from './Pruebas/Pruebas';
 
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
       
       <Route path="/" element={<PaginaBienvenida/>}/>
       <Route path="/Infousuario" element={<UsuarioInformacion/>}/>
-      <Route path="/prueba" element={<DetailEvent/>}/>
+      <Route path="/prueba" element={<Pruebas/>}/>
 
       <Route path="/login" element={<Login/>   }/>
       <Route path="/perfil/:pId" element={ <PerfilBueno/> }/>

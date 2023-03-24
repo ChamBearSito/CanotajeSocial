@@ -8,6 +8,7 @@ import { BsFillBookmarkPlusFill, BsFillBookmarkDashFill } from "react-icons/bs";
 import { deleteFavorite, addFavorite, getAllComments } from "../../api";
 import { LoginContext } from "../../context/Login";
 import Comment from "../Comment/Comment";
+import EditPlace from "../EditPlaceuEvent/EditPlace";
 
 const PubLugar = ({
   place,
@@ -153,6 +154,7 @@ const PubLugar = ({
                   <>
                     {logedUser.id == place.userId ? (
                       <>
+<<<<<<< HEAD
                         <li>
                           <button>Editar</button>
                         </li>
@@ -161,6 +163,36 @@ const PubLugar = ({
                             Borrar
                           </button>
                         </li>
+=======
+                        <li><button> 
+                          
+                          
+                           <label htmlFor="editar">
+                            Editar
+                           </label>
+                           
+                           </button></li>
+
+                           <input type="checkbox" id="editar" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box relative max-w-screen-md border-2 border-info">
+          <label
+            htmlFor="editar"
+            className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+          >
+            ✕
+          </label>
+         <EditPlace/>
+        </div>
+      </div>
+
+
+
+
+
+
+                        <li><button onClick={()=>deleteAPlace(place.id)}>Borrar</button></li>
+>>>>>>> 587dd9c5c1409f3807b1eea403dcb02087abdaf0
                       </>
                     ) : null}
                   </>
