@@ -235,6 +235,23 @@ const createComment = async (aComment) => {
   }
 };
 
+const updatePlace = async(pId)=>{
+  try{
+  const response = await   fetch(`${URL}/places/${pId}`, {
+  method: 'PUT', /* or PATCH */
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+   
+  })
+})
+return await response.json();
+  }
+  
+  catch(error){
+    console.log("Error on UpdatePlace",error )
+  }
+}
+
 export {
   addRegister,
   getAllPlaces,
@@ -255,5 +272,6 @@ export {
   createComment,
   deletePlace,
   deleteEvent,
-  addComment
+  addComment,
+  updatePlace
 };
