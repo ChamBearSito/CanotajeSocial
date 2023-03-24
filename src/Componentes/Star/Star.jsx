@@ -1,23 +1,61 @@
-import React from 'react'
-import { AiFillStar } from 'react-icons/ai'
+import React from "react";
+import { AiFillStar } from "react-icons/ai";
 
-const Star = ({value,onClick}) => {
-    const filledStar = <AiFillStar  color='yellow'/>
-    const emptyStar = <AiFillStar color='yellow' style={{opacity:0.5}}/>
+const Star = ({ setRating }) => {
+
+  const onOffStars = (value) => {
+    const theStars = document.getElementsByClassName("ratingForReview");
+
+    for(let i=value-1;i<theStars.length;i++){
+      theStars[i].dataset.setlight=0;
+      theStars[i].style.opacity=0.5
+    }
+    for(let i=0;i<value;i++){
+      theStars[i].dataset.setlight=1;
+      theStars[i].style.opacity=1
+    }
+    setRating(value)
+  };
+
   return (
     <>
-        
-      <span className='flex flex-wrap bg-black p-3 input' onClick={() => onClick(value)} style={{ cursor: "pointer" }}>
-      {value <= Math.floor(value) ? filledStar : emptyStar}
-      {value >= Math.ceil(value) ? emptyStar : filledStar}
-      {value - Math.floor(value) >= 0.5 ? filledStar : emptyStar}
-      {value <= Math.floor(value) + 1 ? emptyStar : filledStar}
-      {value >= Math.ceil(value) + 1 ? filledStar : emptyStar}
-    </span>
-   
-    
+      <span
+        className="flex flex-wrap bg-black p-3 input"
+        style={{ cursor: "pointer" }}
+      >
+        <AiFillStar
+          className="ratingForReview"
+          data-setlight={1}
+          onClick={()=>onOffStars(1)}
+          color="yellow"
+        />
+        <AiFillStar
+          className="ratingForReview"
+          data-setlight={1}
+          onClick={()=>onOffStars(2)}
+          color="yellow"
+        />
+        <AiFillStar
+          className="ratingForReview"
+          data-setlight={1}
+          onClick={()=>onOffStars(3)}
+          color="yellow"
+        />
+        <AiFillStar
+          className="ratingForReview"
+          data-setlight={1}
+          onClick={()=>onOffStars(4)}
+          color="yellow"
+        />
+        <AiFillStar
+          className="ratingForReview"
+          data-setlight={1}
+          onClick={()=>onOffStars(5)}
+          color="yellow"
+        />
+      </span>
     </>
-  )
-}
+  );
+};
 
-export default Star
+export default Star;

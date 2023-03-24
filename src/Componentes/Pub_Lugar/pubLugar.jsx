@@ -5,42 +5,51 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiMessageRounded } from "react-icons/bi";
 import { getAUser, deletePlace } from "../../api";
 import { BsFillBookmarkPlusFill, BsFillBookmarkDashFill } from "react-icons/bs";
-import { deleteFavorite, addFavorite, getAllComments} from "../../api";
+import { deleteFavorite, addFavorite, getAllComments } from "../../api";
 import { LoginContext } from "../../context/Login";
 import Comment from "../Comment/Comment";
 
-const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
+const PubLugar = ({
+  place,
+  setModalPlace,
+  setIsOpen,
+  isOpen,
+  getThePlaces,
+  isOpenReview,
+  setIsOpenReview,
+  chargeReviews
+}) => {
   const { logedUser } = useContext(LoginContext);
   const [theUser, setTheUser] = useState({});
   const [isOpenComment, setIsOpenComment] = useState(false);
 
   const [savedFav, setSavedFav] = useState({
-    status:false,
-    favId:""
+    status: false,
+    favId: "",
   });
 
   const { favoritesUser } = useContext(LoginContext);
 
-  const deleteOfFavorites=async()=>{
-    try{
+  const deleteOfFavorites = async () => {
+    try {
       const response = await deleteFavorite(savedFav.favId);
-      if(response.status==200){
+      if (response.status == 200) {
         setSavedFav({
-          status:false,
-          favId:""
-        })
+          status: false,
+          favId: "",
+        });
       }
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
 
-  const checkIsFavorite = async() => {
+  const checkIsFavorite = async () => {
     favoritesUser.map((aFav) => {
       if (aFav.placeId == place.id) {
         setSavedFav({
-          status:true,
-          favId:aFav.id
+          status: true,
+          favId: aFav.id,
         });
       }
     });
@@ -54,29 +63,27 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
         eventId: null,
       };
       const response = await addFavorite(favorite);
-      if(response.status==201){
+      if (response.status == 201) {
         setSavedFav({
-          status:true,
-          favId:response.data.id
-        })
+          status: true,
+          favId: response.data.id,
+        });
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const deleteAPlace=async(pId)=>{
-    let respuest=window.confirm("Esta seguro de borrar?");
-    if(respuest){
-      const response=await deletePlace(pId);
-      if(response.status==200){
+  const deleteAPlace = async (pId) => {
+    let respuest = window.confirm("Esta seguro de borrar?");
+    if (respuest) {
+      const response = await deletePlace(pId);
+      if (response.status == 200) {
         await getThePlaces();
-        alert("Se elimino!")
-      }
-      else
-        alert("Algo salio mal!")
+        alert("Se elimino!");
+      } else alert("Algo salio mal!");
     }
-  }
+  };
 
   const searchTheUser = async (pId) => {
     const response = await getAUser(pId);
@@ -94,7 +101,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
         .then()
         .catch((err) => console.log(err));
     }
-    checkIsFavorite()
+    checkIsFavorite();
   }, []);
 
   return (
@@ -110,27 +117,33 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
             </Link>
           </div>
           <div className="place-header-options">
-          {logedUser.id && <>{savedFav.status ? (
-                <button
-                  onClick={() => {deleteOfFavorites()}}
-                  className="cursor-pointer"
-                >
-                  <BsFillBookmarkDashFill fill="red" size={30} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => saveFavorite()}
-                  className="cursor-pointer"
-                >
-                  <BsFillBookmarkPlusFill fill="gold" size={30} />
-                </button>
-              )}</>}
+            {logedUser.id && (
+              <>
+                {savedFav.status ? (
+                  <button
+                    onClick={() => {
+                      deleteOfFavorites();
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <BsFillBookmarkDashFill fill="red" size={30} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => saveFavorite()}
+                    className="cursor-pointer"
+                  >
+                    <BsFillBookmarkPlusFill fill="gold" size={30} />
+                  </button>
+                )}
+              </>
+            )}
             <div className="dropdown dropdown-end">
-              {logedUser.id == place.userId ?
-              <label tabIndex={0}>
-                <BiDotsHorizontalRounded />
-              </label>
-              :null}
+              {logedUser.id == place.userId ? (
+                <label tabIndex={0}>
+                  <BiDotsHorizontalRounded />
+                </label>
+              ) : null}
               <ul
                 tabIndex={0}
                 style={{ zIndex: 10001 }}
@@ -140,8 +153,14 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
                   <>
                     {logedUser.id == place.userId ? (
                       <>
-                        <li><button>Editar</button></li>
-                        <li><button onClick={()=>deleteAPlace(place.id)}>Borrar</button></li>
+                        <li>
+                          <button>Editar</button>
+                        </li>
+                        <li>
+                          <button onClick={() => deleteAPlace(place.id)}>
+                            Borrar
+                          </button>
+                        </li>
                       </>
                     ) : null}
                   </>
@@ -157,7 +176,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
           </div>
         </div>
         <div className="place-datos">
-        <hr />
+          <hr />
           <h1 className="place-title">{place.name}</h1>
           <label
             onClick={() => {
@@ -171,34 +190,28 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
         </div>
         <div className="place-footer">
           <div className="place-footer-comments">
-          <label
-                onClick={() => setIsOpenComment(!isOpenComment)}
-                htmlFor="my-modal-comment"
-              >
-            <BiMessageRounded />
+            <label
+              onClick={() => setIsOpenComment(!isOpenComment)}
+              htmlFor="my-modal-comment"
+            >
+              <BiMessageRounded />
             </label>
-            
-              {/* <>
-                <input
-                  type="checkbox"
-                  id="my-modal-comment"
-                  className="modal-toggle"
-                />
-                <div className="modal " style={{zIndex:10001}}>
-                  <div className="modal-box relative border-2 border-info">
-                    <label
-                      onClick={() => setIsOpenComment(!isOpenComment)}
-                      htmlFor="my-modal-comment"
-                      className="btn btn-sm btn-circle absolute right-2 top-2"
-                    >
-                      ✕
-                    </label>
-                    <Comment listComments={filterComments}/>
-                  </div>
-                </div>
-              </> */}
-            
           </div>
+          <label htmlFor="my-modal-6" className="cursor-pointer">
+            <div
+              style={{
+                width: "125px",
+                height: "25px",
+                position: "absolute",
+                right: "0",
+                zIndex: 10003,
+              }}
+              onClick={() => {
+                chargeReviews(place.id, "place");
+                setIsOpenReview(!isOpenReview);
+              }}
+            ></div>
+          </label>
           <div className="place-rating-global">
             <div className="rating">
               <input
@@ -209,7 +222,8 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
               <input
                 type="radio"
                 name="rating-2"
-                className="mask mask-star-2 bg-orange-400"
+                className={`mask mask-star-2 bg-orange-400 `}
+                id={`rating-review-${place.id}`}
               />
               <input
                 type="radio"

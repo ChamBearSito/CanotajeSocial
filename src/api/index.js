@@ -179,6 +179,41 @@ const getAEvent = async (pId) => {
   }
 };
 
+const getAllReviews=async()=>{
+  try{ 
+    const response= await fetch(`${URL}/reviews`)
+    return await response.json()
+  }catch(err){
+    console.log("error on getAllReviews",err)
+  }
+}
+
+const createReview = async (aRev) => {
+  try {
+    const response = await fetch(`${URL}/reviews/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aRev
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on createReview", error);
+  }
+};
+
+const deleteReview = async (pId) => {
+  try {
+    const response = await fetch(`${URL}/reviews/delete/${pId}`, {
+      method: "DELETE",
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("error on deleteReview", error);
+  }
+};
+
 const deleteFavorite = async (pId) => {
   try {
     const response = await fetch(`${URL}/favorites/delete/${pId}`, {
@@ -255,5 +290,8 @@ export {
   createComment,
   deletePlace,
   deleteEvent,
-  addComment
+  addComment,
+  createReview,
+  deleteReview,
+  getAllReviews
 };

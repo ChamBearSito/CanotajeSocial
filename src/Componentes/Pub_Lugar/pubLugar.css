@@ -124,7 +124,6 @@
 }
 
 .place-rating-global{
-    pointer-events: none;
     position: absolute;
     right: 0;
 }

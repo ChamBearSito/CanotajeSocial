@@ -13,7 +13,6 @@ import { FaRegComment } from "react-icons/fa";
 import { BsFillBookmarkPlusFill, BsFillBookmarkDashFill } from "react-icons/bs";
 import { BsFillArrowDownCircleFill } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
-import Review from "../Review/Review";
 import { LoginContext } from "../../context/Login";
 
 //Traemos el TheEvent
@@ -23,6 +22,9 @@ const Event = ({
   isOpenComment,
   chargeComments,
   getTheEvents,
+  chargeReviews,
+  setIsOpenReview,
+  isOpenReview
 }) => {
   //Traemos el logedUser de su Context
   const { logedUser } = useContext(LoginContext);
@@ -31,8 +33,8 @@ const Event = ({
   const [isOpen2, setIsOpen2] = useState(false);
   //
   const [savedFav, setSavedFav] = useState({
-    status:false,
-    favId:""
+    status: false,
+    favId: "",
   });
 
   const { favoritesUser } = useContext(LoginContext);
@@ -62,37 +64,37 @@ const Event = ({
         eventId: theEvent.id,
       };
       const response = await addFavorite(favorite);
-      if(response.status==201){
+      if (response.status == 201) {
         setSavedFav({
-          status:true,
-          favId:response.data.id
-        })
+          status: true,
+          favId: response.data.id,
+        });
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const deleteOfFavorites=async()=>{
-    try{
+  const deleteOfFavorites = async () => {
+    try {
       const response = await deleteFavorite(savedFav.favId);
-      if(response.status==200){
+      if (response.status == 200) {
         setSavedFav({
-          status:false,
-          favId:""
-        })
+          status: false,
+          favId: "",
+        });
       }
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
 
-  const checkIsFavorite = async() => {
+  const checkIsFavorite = async () => {
     favoritesUser.map((aFav) => {
       if (aFav.eventId == theEvent.id) {
         setSavedFav({
-          status:true,
-          favId:aFav.id
+          status: true,
+          favId: aFav.id,
         });
       }
     });
@@ -145,7 +147,7 @@ const Event = ({
         .catch((err) => console.log(err));
     }
     chargeComments(theEvent.id, true);
-
+    chargeReviews(theEvent.id, "event", true);
     checkIsFavorite();
   }, []);
 
@@ -170,7 +172,9 @@ const Event = ({
               {/* Para Favotiros */}
               {savedFav.status ? (
                 <button
-                  onClick={() => {deleteOfFavorites()}}
+                  onClick={() => {
+                    deleteOfFavorites();
+                  }}
                   className="cursor-pointer"
                 >
                   <BsFillBookmarkDashFill fill="red" size={30} />
@@ -265,7 +269,14 @@ const Event = ({
             </div>
             {/* FIN Fecha */}
             <div className="mx-auto ">
-              <label htmlFor="my-modal-6" className="cursor-pointer">
+              <label
+                htmlFor="my-modal-6"
+                onClick={() => {
+                  chargeReviews(theEvent.id, "event")
+                  setIsOpenReview(!isOpenReview);
+                }}
+                className="cursor-pointer"
+              >
                 <AiOutlineStar fill="back" size={40} />
               </label>
             </div>
@@ -281,19 +292,6 @@ const Event = ({
               >
                 <FaRegComment fill="black" size={40} />
               </label>
-            </div>
-          </div>
-
-          <input type="checkbox" id="my-modal-6" className="modal-toggle" />
-          <div className="modal">
-            <div className="modal-box relative w-fit border-2 border-info">
-              <label
-                htmlFor="my-modal-6"
-                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
-              >
-                ✕
-              </label>
-              <Review />
             </div>
           </div>
         </div>

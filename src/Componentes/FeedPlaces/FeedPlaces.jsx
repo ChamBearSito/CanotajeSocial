@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getAllComments } from "../../api";
+import { getAllComments, getAllReviews } from "../../api";
 import PubLugar from "../Pub_Lugar/pubLugar";
 import Event from "../Event/Event";
 import DetailsPlaces from "../ParaDetailplace/DetailsPlaces";
 import { SearchContext } from "../../context/SearchContext";
 import Comment from "../Comment/Comment";
 import { LoginContext } from "../../context/Login";
+import Review from "../Review/Review";
 
 const FeedPlaces = ({
   thePlaces,
@@ -20,11 +21,40 @@ const FeedPlaces = ({
   const [isOpenComment, setIsOpenComment] = useState(false);
   const [currentComment, setCurrentComment]=useState();
 
+  const [isOpenReview,setIsOpenReview]=useState(false)
+  const [allReviews,setAllReviews]=useState([])
+  const [currentReview,setCurrentReview]=useState()
+  const [reviewsCharged,setReviewsCharged]=useState([])
+
   const getAllTheComents = async () => {
     const response = await getAllComments();
     setTheComments(response.data);
     return response.data;
   };
+
+  const getAllTheReviews=async()=>{
+    const response = await getAllReviews();
+    setAllReviews(response.data)
+    return response.data
+  }
+
+  const chargeReviews=async(pId,pOe,chargeAll)=>{
+    let arrayFilter = [];
+    let response=[...allReviews];
+    let option;
+    if (chargeAll == true) {
+      response=await getAllTheReviews();
+    }
+    response.map((aReview) => {
+      pOe=="place" && aReview.eventId==null?option=aReview.placeId:option=aReview.eventId;
+      if (option == pId) {
+        arrayFilter.push(aReview);
+      }
+    });
+    // seteamos el filtrerComent y lo cargamos con el array
+    setCurrentReview({id:pId,pOe:pOe});
+    setReviewsCharged(arrayFilter);
+  }
 
   const chargeComments = async(eventId, chargeAll) => {
     let arrayFilter = [];
@@ -71,6 +101,7 @@ const FeedPlaces = ({
     getAllTheComents()
       .then()
       .catch((err) => console.log(err));
+    getAllTheReviews()
   }, []);
 
   //cada vez que cambie e IsOpen se LLama al filtrador
@@ -102,6 +133,9 @@ const FeedPlaces = ({
               place={aPlace}
               isOpen={isOpen}
               setModalPlace={setModalPlace}
+              isOpenReview={isOpenReview}
+              setIsOpenReview={setIsOpenReview}
+              chargeReviews={chargeReviews}
               setIsOpen={setIsOpen}
             />
           ))}
@@ -119,7 +153,10 @@ const FeedPlaces = ({
                 isOpenComment={isOpenComment}
                 setIsOpenComment={setIsOpenComment}
                 chargeComments={chargeComments}
+                isOpenReview={isOpenReview}
+                setIsOpenReview={setIsOpenReview}
                 getTheEvents={getTheEvents}
+                chargeReviews={chargeReviews}
               />
             </>
           ))}
@@ -148,7 +185,7 @@ const FeedPlaces = ({
         </>
       )}
           <input type="checkbox" id="my-modal-5" className="modal-toggle" />
-          <div className="modal">
+          <div className="modal" style={{zIndex:10002}}>
             <div className="modal-box relative w-fit border-2 border-info">
               <label
                 htmlFor="my-modal-5"
@@ -164,6 +201,25 @@ const FeedPlaces = ({
               />
             </div>
           </div>
+        {isOpenReview && <>
+          <input type="checkbox" id="my-modal-6" className="modal-toggle" />
+          <div className="modal" style={{zIndex:10002}}>
+            <div className="modal-box relative w-fit border-2 border-info">
+              <label
+                htmlFor="my-modal-6"
+                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+                onClick={()=>setIsOpenReview(!isOpenReview)}
+              >
+                ✕
+              </label>
+              <Review 
+                key={currentReview.id}
+                pOe={currentReview}
+                chargeReviews={chargeReviews}
+                listReviews={reviewsCharged}/>
+            </div>
+          </div>
+          </>}
     </div>
   );
 };

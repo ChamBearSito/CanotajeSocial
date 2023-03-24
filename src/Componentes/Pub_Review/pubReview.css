@@ -4,7 +4,8 @@
     font-size: 15px;
     position: relative;
     display:flex;
-    width:400px;
+    flex-wrap: wrap;
+    max-width:500px;
     min-height:auto;
     background-color: #fff;
 }
@@ -15,11 +16,9 @@
 
 .review-content{
     overflow-wrap: break-word;
-    width:45%;
+    width:42%;
 }
 
 .rating{
     pointer-events: none;
-    position:absolute;
-    right: 5px;
 }
