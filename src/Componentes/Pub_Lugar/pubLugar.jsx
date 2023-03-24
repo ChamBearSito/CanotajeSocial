@@ -154,16 +154,6 @@ const PubLugar = ({
                   <>
                     {logedUser.id == place.userId ? (
                       <>
-<<<<<<< HEAD
-                        <li>
-                          <button>Editar</button>
-                        </li>
-                        <li>
-                          <button onClick={() => deleteAPlace(place.id)}>
-                            Borrar
-                          </button>
-                        </li>
-=======
                         <li><button> 
                           
                           
@@ -192,7 +182,6 @@ const PubLugar = ({
 
 
                         <li><button onClick={()=>deleteAPlace(place.id)}>Borrar</button></li>
->>>>>>> 587dd9c5c1409f3807b1eea403dcb02087abdaf0
                       </>
                     ) : null}
                   </>
