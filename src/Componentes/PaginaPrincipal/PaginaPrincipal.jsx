@@ -14,6 +14,7 @@ import RellenoModalEvento from "../ParaSubirEvento/RellenoModalEvento";
 import { getAllEvents, getAllPlaces } from "../../api";
 
 const PaginaPrincipal = () => {
+  const { getFavoritesXUser } = useContext(LoginContext);
   const { logedUser } = useContext(LoginContext);
   const [thePlaces, setThePlaces] = useState([]);
   const [theEvents, setTheEvents] = useState([]);
@@ -29,6 +30,10 @@ const PaginaPrincipal = () => {
     const response = await getAllEvents();
     setTheEvents(response.data.reverse());
   };
+
+  useEffect(()=>{
+    getFavoritesXUser(logedUser.id)
+  },[logedUser])
 
   useEffect(() => {
     getThePlaces();
@@ -111,6 +116,7 @@ const PaginaPrincipal = () => {
         <FeedPlaces
           turnShowEvents={showEvents}
           thePlaces={thePlaces}
+          getThePlaces={getThePlaces}
           setThePlaces={setThePlaces}
           theEvents={theEvents}
           getTheEvents={getTheEvents}

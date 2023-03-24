@@ -4,28 +4,47 @@ import { Link } from "react-router-dom";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiMessageRounded } from "react-icons/bi";
 import { getAUser, deletePlace } from "../../api";
-import { getAPlace, addFavorite, getAllComments} from "../../api";
+import { BsFillBookmarkPlusFill, BsFillBookmarkDashFill } from "react-icons/bs";
+import { deleteFavorite, addFavorite, getAllComments} from "../../api";
 import { LoginContext } from "../../context/Login";
 import Comment from "../Comment/Comment";
 
-const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
+const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen,getThePlaces }) => {
   const { logedUser } = useContext(LoginContext);
   const [theUser, setTheUser] = useState({});
   const [isOpenComment, setIsOpenComment] = useState(false);
-  const [filterComments, setFilterComments]=useState([]);
 
-  const chargeComments=async()=>{
-    const response= await getAllComments();
-    
-    let arrayFilter=[];
-    response.data.map((aComment)=>{
-      if(aComment.placeId==place.id){
-        arrayFilter.push(aComment)
+  const [savedFav, setSavedFav] = useState({
+    status:false,
+    favId:""
+  });
+
+  const { favoritesUser } = useContext(LoginContext);
+
+  const deleteOfFavorites=async()=>{
+    try{
+      const response = await deleteFavorite(savedFav.favId);
+      if(response.status==200){
+        setSavedFav({
+          status:false,
+          favId:""
+        })
       }
-    })
-
-    setFilterComments(arrayFilter)
+    }catch(err){
+      console.log(err)
+    }
   }
+
+  const checkIsFavorite = async() => {
+    favoritesUser.map((aFav) => {
+      if (aFav.placeId == place.id) {
+        setSavedFav({
+          status:true,
+          favId:aFav.id
+        });
+      }
+    });
+  };
 
   const saveFavorite = async () => {
     try {
@@ -35,7 +54,12 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
         eventId: null,
       };
       const response = await addFavorite(favorite);
-      console.log(response);
+      if(response.status==201){
+        setSavedFav({
+          status:true,
+          favId:response.data.id
+        })
+      }
     } catch (err) {
       console.log(err);
     }
@@ -45,8 +69,10 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
     let respuest=window.confirm("Esta seguro de borrar?");
     if(respuest){
       const response=await deletePlace(pId);
-      if(response.status==200)
+      if(response.status==200){
+        await getThePlaces();
         alert("Se elimino!")
+      }
       else
         alert("Algo salio mal!")
     }
@@ -68,7 +94,7 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
         .then()
         .catch((err) => console.log(err));
     }
-    chargeComments().then().catch((err)=>console.log(err))
+    checkIsFavorite()
   }, []);
 
   return (
@@ -84,10 +110,27 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
             </Link>
           </div>
           <div className="place-header-options">
+          {logedUser.id && <>{savedFav.status ? (
+                <button
+                  onClick={() => {deleteOfFavorites()}}
+                  className="cursor-pointer"
+                >
+                  <BsFillBookmarkDashFill fill="red" size={30} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => saveFavorite()}
+                  className="cursor-pointer"
+                >
+                  <BsFillBookmarkPlusFill fill="gold" size={30} />
+                </button>
+              )}</>}
             <div className="dropdown dropdown-end">
+              {logedUser.id == place.userId ?
               <label tabIndex={0}>
                 <BiDotsHorizontalRounded />
               </label>
+              :null}
               <ul
                 tabIndex={0}
                 style={{ zIndex: 10001 }}
@@ -95,9 +138,6 @@ const PubLugar = ({ place, setModalPlace, setIsOpen, isOpen }) => {
               >
                 {logedUser.id ? (
                   <>
-                    <li>
-                      <button onClick={() => saveFavorite()}>Guardar</button>
-                    </li>
                     {logedUser.id == place.userId ? (
                       <>
                         <li><button>Editar</button></li>

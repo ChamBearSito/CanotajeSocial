@@ -8,6 +8,7 @@ import { LoginContext } from "../../context/Login";
 const RellenoModal = ({thePlaces, setThePlaces}) => {
   const [selected, setSelected] = useState("");
   const { logedUser } = useContext(LoginContext);
+  const [fileImage,setFileImage]=useState();
 
   const [place, setPlace] = useState({
     userId: logedUser.id,
@@ -21,32 +22,42 @@ const RellenoModal = ({thePlaces, setThePlaces}) => {
   const CLOUD_NAME = "ddk8ydo51";
   const UPLOAD_PRESET = "u2skitgq";
 
-  const upload = async (file) => {
+  const upload = async (place) => {
     const data2 = new FormData();
-    data2.append("file", file);
+    data2.append("file", fileImage);
     data2.append("upload_preset", UPLOAD_PRESET);
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
       { method: "POST", body: data2 }
     );
     const data3 = await response.json();
-    
-    setPlace({ ...place, images: [{ url: `${data3.secure_url}` }] }); // reemplazar con un mensaje de éxito o la acción deseada
-    console.log(place)
+    let placeActualized={ ...place, images: [{ url: `${data3.secure_url}` }] }
+    addPlace(placeActualized)
   };
   
   // const placeIds = events.map((event)=>event.id);
   const addPlace = async (pPlace) => {
     const response = await createPlace(pPlace);
-    if(response)
-      setThePlaces(...thePlaces,pPlace);
+    if(response.status==201){
+      const placesActualized=[response.data,...thePlaces]
+      setThePlaces(placesActualized);
+      alert('Se agrego!')
+    }else{
+      alert('Hubo un error!')
+    }
+    setPlace({
+      userId: logedUser.id,
+      name: "",
+      images: [{ url: "https://via.placeholder.com/300" }],
+      description: "",
+      location: "",
+      waterType: "",
+    })
   };
 
   const handleAddPlace = (e) => {
     e.preventDefault();
-    addPlace(place)
-      .then()
-      .catch((err) => console.log(err));
+    upload(place);
   };
 
   const handleChange = (event) => {
@@ -109,7 +120,7 @@ const RellenoModal = ({thePlaces, setThePlaces}) => {
               type="file"
               className="file-input file-input-bordered file-input-primary w-full max-w-xs"
               onChange={(e) => {
-                upload(e.target.files[0]);
+                setFileImage(e.target.files[0])
               }}
               id="images"
             />

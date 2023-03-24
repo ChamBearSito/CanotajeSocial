@@ -1,32 +1,41 @@
 import React, { useContext, useEffect, useState } from "react";
 import foto from "../../assets/img/perfil1.jpg";
-import './Event.css'
+import "./Event.css";
 
 import {
   getAPlace,
   getAUser,
   addFavorite,
-  getAllComments,
   deleteEvent,
+  deleteFavorite,
 } from "../../api";
 import { FaRegComment } from "react-icons/fa";
-import { BsFillBookmarkStarFill } from "react-icons/bs";
+import { BsFillBookmarkPlusFill, BsFillBookmarkDashFill } from "react-icons/bs";
 import { BsFillArrowDownCircleFill } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
-import Comment from "../Comment/Comment";
 import Review from "../Review/Review";
 import { LoginContext } from "../../context/Login";
 
 //Traemos el TheEvent
-const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) => {
+const Event = ({
+  theEvent,
+  setIsOpenComment,
+  isOpenComment,
+  chargeComments,
+  getTheEvents,
+}) => {
   //Traemos el logedUser de su Context
   const { logedUser } = useContext(LoginContext);
   //Acordiones
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
-  const [isOpenComment, setIsOpenComment] = useState(false);
-  const [currentComment, setCurrentComment]=useState(theEvent.id);
   //
+  const [savedFav, setSavedFav] = useState({
+    status:false,
+    favId:""
+  });
+
+  const { favoritesUser } = useContext(LoginContext);
 
   // estado para abrir Boton de Editar o Borrar
   const [editarborrar, seteditarborrar] = useState(false);
@@ -40,6 +49,7 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
     lastName: "Anonimous",
   });
 
+  const { getFavoritesXUser } = useContext(LoginContext);
   // llamamos a la funcion de la api de getAllComents, cramos un arrayFiltrer, entonces por cada comentario
   //si el comentario.placeId es igual al theEvent.id entonces que a ese comentario lo guarde en el array
 
@@ -52,10 +62,40 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
         eventId: theEvent.id,
       };
       const response = await addFavorite(favorite);
-      console.log(response);
+      if(response.status==201){
+        setSavedFav({
+          status:true,
+          favId:response.data.id
+        })
+      }
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const deleteOfFavorites=async()=>{
+    try{
+      const response = await deleteFavorite(savedFav.favId);
+      if(response.status==200){
+        setSavedFav({
+          status:false,
+          favId:""
+        })
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  const checkIsFavorite = async() => {
+    favoritesUser.map((aFav) => {
+      if (aFav.eventId == theEvent.id) {
+        setSavedFav({
+          status:true,
+          favId:aFav.id
+        });
+      }
+    });
   };
 
   // Obtenemos el Place mandandole el placeId, y seteamos el PlaceXEvent con la respuesta
@@ -77,10 +117,9 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
     if (respuest) {
       const response = await deleteEvent(pId);
       if (response.status == 200) {
-        getTheEvents()
+        getTheEvents();
         alert("Se elimino!");
-      }
-      else alert("Algo salio mal!");
+      } else alert("Algo salio mal!");
     }
   };
 
@@ -105,13 +144,18 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
         .then()
         .catch((err) => console.log(err));
     }
-    chargeComments(theEvent.id,true)
+    chargeComments(theEvent.id, true);
+
+    checkIsFavorite();
   }, []);
 
   return (
     <>
-      <div className=" p-2 " >
-        <div style={{width:'400px',height:'auto'}} className="bg-white card rounded-xl max-w-md border-2 border-info">
+      <div className=" p-2 ">
+        <div
+          style={{ width: "400px", height: "auto" }}
+          className="bg-white card rounded-xl max-w-md border-2 border-info"
+        >
           <div className="flex items-center px-4 py-3">
             <img className="h-16 w-16 rounded-full" src={foto} />
             <div className="ml-3 ">
@@ -124,12 +168,27 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
             </div>
             <div className=" ml-5 absolute right-5">
               {/* Para Favotiros */}
-              <button onClick={() => saveFavorite()} className="cursor-pointer">
-                <BsFillBookmarkStarFill fill="gold" size={30} />
-              </button>
-              {logedUser.id == theEvent.userId && 
-                <button onClick={toggleDropdown}>
-                  <BsFillArrowDownCircleFill size={30} />
+              {savedFav.status ? (
+                <button
+                  onClick={() => {deleteOfFavorites()}}
+                  className="cursor-pointer"
+                >
+                  <BsFillBookmarkDashFill fill="red" size={30} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => saveFavorite()}
+                  className="cursor-pointer"
+                >
+                  <BsFillBookmarkPlusFill fill="gold" size={30} />
+                </button>
+              )}
+
+              {logedUser.id == theEvent.userId && (
+                <>
+                  <button onClick={toggleDropdown}>
+                    <BsFillArrowDownCircleFill size={30} />
+                  </button>
                   {editarborrar && (
                     <div className="absolute right-0">
                       <ul
@@ -137,13 +196,19 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
                         style={{ zIndex: 10001 }}
                         className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
                       >
-                        <li className="justify-between">Editar</li>
-                        <button onClick={()=>deleteAEvent(theEvent.id)}><li className="justify-between">Borrar</li></button>
+                        <li className="justify-between">
+                          <button onClick={() => {}}>Editar</button>
+                        </li>
+                        <li className="justify-between">
+                          <button onClick={() => deleteAEvent(theEvent.id)}>
+                            Borrar
+                          </button>
+                        </li>
                       </ul>
                     </div>
                   )}
-                </button>
-              }
+                </>
+              )}
             </div>
           </div>
 
@@ -151,12 +216,15 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
           <div className="text-center">
             <h1 className="">{theEvent.name}</h1>
           </div>
-          <div style={{height:'300px'}}>
-          {theEvent.images[0] ? (
-            <img className="event-image" src={theEvent.images[0].url} />
-          ) : (
-            <img className="event-image" src={"https://via.placeholder.com/150"} />
-          )}
+          <div style={{ height: "300px" }}>
+            {theEvent.images[0] ? (
+              <img className="event-image" src={theEvent.images[0].url} />
+            ) : (
+              <img
+                className="event-image"
+                src={"https://via.placeholder.com/150"}
+              />
+            )}
           </div>
           <div className="flex flex-wrap gap-5 items-center justify-between mx-4 mt-3 mb-2">
             {/* LA DESCRIPCION */}
@@ -171,7 +239,7 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
               </button>
               {isOpen && (
                 <div className="px-4 py-2 text-gray-700 bg-white">
-                  {theEvent.description} {theEvent.id}
+                  {theEvent.description}
                 </div>
               )}
             </div>
@@ -207,9 +275,7 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
                 htmlFor="my-modal-5"
                 onClick={() => {
                   chargeComments(theEvent.id);
-                  setIsOpenComment(!isOpenComment)
-                  setCurrentComment(theEvent.id)
-                  console.log('Evento CLicked',currentComment);
+                  setIsOpenComment(!isOpenComment);
                 }}
                 className="cursor-pointer"
               >
@@ -217,20 +283,7 @@ const Event = ({ theEvent,eventId, theComments, chargeComments ,getTheEvents}) =
               </label>
             </div>
           </div>
-              <input type="checkbox" id="my-modal-5" className="modal-toggle" />
-              <div className="modal">
-                <div className="modal-box relative w-fit border-2 border-info">
-                  <label
-                    htmlFor="my-modal-5"
-                    className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
-                  >
-                    ✕
-                  </label>
-                  <Comment key={currentComment} chargeComments={chargeComments} eventId={eventId} listComments={theComments} />
-                </div>
-              </div>
-            
-          
+
           <input type="checkbox" id="my-modal-6" className="modal-toggle" />
           <div className="modal">
             <div className="modal-box relative w-fit border-2 border-info">

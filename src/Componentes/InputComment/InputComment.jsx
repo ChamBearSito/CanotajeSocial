@@ -1,7 +1,7 @@
 import React,{useState,useContext} from 'react'
 import { LoginContext } from '../../context/Login';
 
-const InputComment = (props,{eventId}) => {
+const InputComment = ({onSubmit, eventId}) => {
   const {logedUser}=useContext(LoginContext);
   const [comment, setComment] = useState("");
 
@@ -12,7 +12,8 @@ const InputComment = (props,{eventId}) => {
       eventId:eventId,
       comment:comment
     }
-    props.onSubmit(addCommentary)
+    onSubmit(addCommentary)
+    setComment("")
   }
 
   return (
@@ -27,8 +28,7 @@ const InputComment = (props,{eventId}) => {
             cols="30"
             rows="20"
             value={comment}
-            onChange={(e) => {setComment(e.target.value)
-              console.log('Escribiendo en...',eventId)}}
+            onChange={(e) => {setComment(e.target.value)}}
           ></textarea>
           <button
             className="btn btn-info mt-3 hover:scale-110 transition duration-300 "

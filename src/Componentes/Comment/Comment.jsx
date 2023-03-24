@@ -7,11 +7,9 @@ import TrueComment from "../TrueComment/TrueComment";
 //recibimos el onComent y la lista de Comentarios 
 const Comment = ({ listComments,eventId,chargeComments }) => {
   //Estado para comentario
-  let elEvento=eventId;
 
   const handleSubmit = async(addCommentary) => {
     try{
-      console.log('El Evento:',addCommentary.eventId)
       const response =async()=> await addComment(addCommentary)
       const theResult=await response();
       if(theResult.status==201){
@@ -23,8 +21,8 @@ const Comment = ({ listComments,eventId,chargeComments }) => {
   };
 
   return (
-    <div style={{position:"relative",zIndex:10002}} onClick={()=>{console.log(elEvento)}}>
-      <InputComment onSubmit={handleSubmit} eventId={elEvento}/>
+    <div style={{position:"relative",zIndex:10002}}>
+      <InputComment onSubmit={handleSubmit} eventId={eventId}/>
       <div className="mt-5">
         {/* Recorremos la lista y por cada uno creamos Pub_Review */}
         {listComments.map((aComment)=>

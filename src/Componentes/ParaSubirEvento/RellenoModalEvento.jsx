@@ -14,7 +14,7 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
   }, []);
 
   const {logedUser}=useContext(LoginContext);
-  const [theFile, setTheFile]=useState({});
+  const [fileImage,setFileImage]=useState();
 
   const [thePlaces,setThePlaces]=useState([]);
   const [event, setEvent] = useState({
@@ -32,13 +32,22 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
       const EventsResfresh=[response.data,...theEvents]
       setTheEvents(EventsResfresh);
       alert("Is susscesfully!");
+    }else{
+      alert('Hubo un error!')
     }
+    setEvent({
+      userId:logedUser.id,
+      placeId: 0,
+      name: "",
+      images: [{url:"https://via.placeholder.com/300"}],
+      description: "",
+      date: "2023-05-27",
+    })
   };
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-    upload(theFile)
-    console.log(theFile)
+    upload(event)
   };
 
   const onAddEvent = (e) => {
@@ -51,19 +60,17 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
   const CLOUD_NAME = "ddk8ydo51";
   const UPLOAD_PRESET = "u2skitgq";
 
-  const upload = async (file) => {
+  const upload = async (event) => {
     const data2 = new FormData();
-    data2.append("file", file);
+    data2.append("file", fileImage);
     data2.append("upload_preset", UPLOAD_PRESET);
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
       { method: "POST", body: data2 }
     );
     const data3 = await response.json();
-    
-    setEvent({ ...event, images: [{ url: `${data3.secure_url}` }] }); // reemplazar con un mensaje de éxito o la acción deseada
-    
-    addEvent(event)
+    let eventActualized={ ...event, images: [{ url: `${data3.secure_url}` }] }   
+    addEvent(eventActualized)
       .then()
       .catch((err) => console.log(err));
   };
@@ -128,7 +135,7 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
               type="file"
               className="file-input file-input-bordered file-input-primary w-full max-w-xs" 
               id="image"
-              onChange={(e)=>{setTheFile(e.target.files[0])}}
+              onChange={(e)=>{setFileImage(e.target.files[0])}}
             />
           </div>
         </div>

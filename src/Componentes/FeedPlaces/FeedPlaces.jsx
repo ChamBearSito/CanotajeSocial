@@ -1,47 +1,52 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getAllPlaces, getAllEvents, getAllComments } from "../../api";
+import { getAllComments } from "../../api";
 import PubLugar from "../Pub_Lugar/pubLugar";
-import Event from '../Event/Event'
-import { getAPlace, getAUser } from "../../api";
+import Event from "../Event/Event";
 import DetailsPlaces from "../ParaDetailplace/DetailsPlaces";
 import { SearchContext } from "../../context/SearchContext";
-import { render } from "react-dom";
+import Comment from "../Comment/Comment";
+import { LoginContext } from "../../context/Login";
 
 const FeedPlaces = ({
   thePlaces,
   setThePlaces,
   turnShowEvents,
   theEvents,
-  getTheEvents
+  getThePlaces,
+  getTheEvents,
 }) => {
-  const [theComments, setTheComments]=useState([]);
-  const [commentCharged, setCommentCharged]=useState([])
-  
-  const getAllComents=async()=>{
-    const response = await getAllComments();
-    setTheComments(response.data)
-  }
+  const [theComments, setTheComments] = useState([]);
+  const [commentCharged, setCommentCharged] = useState([]);
+  const [isOpenComment, setIsOpenComment] = useState(false);
+  const [currentComment, setCurrentComment]=useState();
 
-  const chargeComments = async(eventId,chargeAll) => {
+  const getAllTheComents = async () => {
+    const response = await getAllComments();
+    setTheComments(response.data);
+    return response.data;
+  };
+
+  const chargeComments = async(eventId, chargeAll) => {
     let arrayFilter = [];
-    if(chargeAll==true){
-      await getAllComents()
+    let response=[...theComments];
+    if (chargeAll == true) {
+      response=await getAllTheComents();
     }
-    theComments.map((aComment) => {
+    response.map((aComment) => {
       if (aComment.eventId == eventId) {
-        const myComment={
-          comment:aComment
-        }
+        const myComment = {
+          comment: aComment,
+        };
         arrayFilter.push(myComment);
       }
     });
     // seteamos el filtrerComent y lo cargamos con el array
+    setCurrentComment(eventId);
     setCommentCharged(arrayFilter);
   };
 
   // Recibimos PlacesFiltrer de su Contexto
   const { placesFilter } = useContext(SearchContext);
-
   // Creamos Estado inicializandolo como Objeto
   const [modalPlace, setModalPlace] = useState({});
   //estado Para Abrir
@@ -62,35 +67,38 @@ const FeedPlaces = ({
     setFilterEvents(eventFilterArray);
   };
 
-  useEffect(()=>{
-    getAllComents().then().catch((err)=>console.log(err))
-  },[])
+  useEffect(() => {
+    getAllTheComents()
+      .then()
+      .catch((err) => console.log(err));
+  }, []);
 
-//cada vez que cambie e IsOpen se LLama al filtrador
+  //cada vez que cambie e IsOpen se LLama al filtrador
   useEffect(() => {
     filterEventsArray();
   }, [isOpen]);
 
-//cada vez que cambie el PlacesFiltrer se setea Nuevamente el The places y le enviamos el placesFiltrer
+  //cada vez que cambie el PlacesFiltrer se setea Nuevamente el The places y le enviamos el placesFiltrer
   useEffect(() => {
     setThePlaces(placesFilter);
   }, [placesFilter]);
 
   const mystyle = {
-    display:'Flex',
+    display: "Flex",
     justifyContent: "Center",
     gap: "5px",
-    flexWrap:'Wrap',
+    flexWrap: "Wrap",
     padding: "10px",
   };
   return (
     <div>
-    {/* si ThePlces Exite  y turnShowEvents es false entonces por cada place genera la Publicacion */}
+      {/* si ThePlces Exite  y turnShowEvents es false entonces por cada place genera la Publicacion */}
       {thePlaces && turnShowEvents == false && (
         <div style={mystyle}>
           {thePlaces.map((aPlace) => (
             <PubLugar
               key={aPlace.id}
+              getThePlaces={getThePlaces}
               place={aPlace}
               isOpen={isOpen}
               setModalPlace={setModalPlace}
@@ -99,25 +107,24 @@ const FeedPlaces = ({
           ))}
         </div>
       )}
-       {/* si ThePlces Exite  y turnShowEvents es true entonces por cada evento muestre el evento */}
-      {theEvents && turnShowEvents == true && 
+      {/* si ThePlces Exite  y turnShowEvents es true entonces por cada evento muestre el evento */}
+      {theEvents && turnShowEvents == true && (
         <div style={mystyle}>
           {theEvents.map((aEvent) => 
-            (
+          (
             <>
-            <Event
-              key={aEvent.id}
-              theEvent={aEvent}
-              eventId={aEvent.id}
-              chargeComments={chargeComments}
-              theComments={commentCharged}
-              getTheEvents={getTheEvents}
-            />
+              <Event
+                key={`${aEvent.id}e`}
+                theEvent={aEvent}
+                isOpenComment={isOpenComment}
+                setIsOpenComment={setIsOpenComment}
+                chargeComments={chargeComments}
+                getTheEvents={getTheEvents}
+              />
             </>
-          )
-          )}
+          ))}
         </div>
-      }
+      )}
 
       {isOpen && (
         <>
@@ -140,6 +147,23 @@ const FeedPlaces = ({
           </div>
         </>
       )}
+          <input type="checkbox" id="my-modal-5" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box relative w-fit border-2 border-info">
+              <label
+                htmlFor="my-modal-5"
+                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+              >
+                ✕
+              </label>
+              <Comment
+                key={currentComment}
+                chargeComments={chargeComments}
+                eventId={currentComment}
+                listComments={commentCharged}
+              />
+            </div>
+          </div>
     </div>
   );
 };
