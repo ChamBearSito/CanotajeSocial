@@ -308,11 +308,5 @@ export {
   deletePlace,
   deleteEvent,
   addComment,
-<<<<<<< HEAD
-  createReview,
-  deleteReview,
-  getAllReviews
-=======
   updatePlace
->>>>>>> 587dd9c5c1409f3807b1eea403dcb02087abdaf0
 };
