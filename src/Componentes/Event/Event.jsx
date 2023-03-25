@@ -24,7 +24,10 @@ const Event = ({
   getTheEvents,
   chargeReviews,
   setIsOpenReview,
-  isOpenReview
+  isOpenReview,
+  setEditEvent,
+  isOpenEditEvent,
+  setIsOpenEditEvent
 }) => {
   //Traemos el logedUser de su Context
   const { logedUser } = useContext(LoginContext);
@@ -201,7 +204,11 @@ const Event = ({
                         className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
                       >
                         <li className="justify-between">
-                          <button onClick={() => {}}>Editar</button>
+                          <label htmlFor="editarEvent" onClick={() => {
+                            setEditEvent(theEvent)
+                            setIsOpenEditEvent(!isOpenEditEvent)}}>
+                          <button 
+                          >Editar</button></label>
                         </li>
                         <li className="justify-between">
                           <button onClick={() => deleteAEvent(theEvent.id)}>

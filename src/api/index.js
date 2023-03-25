@@ -3,13 +3,11 @@ const URL = "http://ec2-44-200-15-255.compute-1.amazonaws.com:4000";
 const addRegister = async (aUser) => {
   try {
     const response = await fetch(`${URL}/users/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(
-          {
-          ...aUser
-        }
-      ),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aUser,
+      }),
     });
     return await response.json();
   } catch (error) {
@@ -20,13 +18,11 @@ const addRegister = async (aUser) => {
 const addComment = async (aComment) => {
   try {
     const response = await fetch(`${URL}/comments/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(
-          {
-          ...aComment
-        }
-      ),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aComment,
+      }),
     });
     return await response.json();
   } catch (error) {
@@ -37,13 +33,11 @@ const addComment = async (aComment) => {
 const addFavorite = async (aFav) => {
   try {
     const response = await fetch(`${URL}/favorites/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(
-          {
-          ...aFav
-        }
-      ),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aFav,
+      }),
     });
     return await response.json();
   } catch (error) {
@@ -51,20 +45,21 @@ const addFavorite = async (aFav) => {
   }
 };
 
-const filterPlaces = async(textFilter)=>{
+const filterPlaces = async (textFilter) => {
   try {
-    const response = await fetch(`${URL}/places/search/multi?name=${textFilter}`);
+    const response = await fetch(
+      `${URL}/places/search/multi?name=${textFilter}`
+    );
     return await response.json();
   } catch (error) {
     console.log("error on getFilterPlaces", error);
   }
-}
+};
 
 const getFavoritesUser = async (pId) => {
   try {
     const response = await fetch(`${URL}/favorites/user/${pId}`);
     return await response.json();
-    
   } catch (error) {
     console.log("error on getFavoritesUser", error);
   }
@@ -85,8 +80,8 @@ const getLogin = async (aUser) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email:aUser.email,
-        password:aUser.password
+        email: aUser.email,
+        password: aUser.password,
       }),
     });
     return await response.json();
@@ -101,7 +96,7 @@ const createPlace = async (aPlace) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...aPlace
+        ...aPlace,
       }),
     });
     return await response.json();
@@ -127,7 +122,7 @@ const createEvent = async (aEvent) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...aEvent
+        ...aEvent,
       }),
     });
     return await response.json();
@@ -179,14 +174,14 @@ const getAEvent = async (pId) => {
   }
 };
 
-const getAllReviews=async()=>{
-  try{ 
-    const response= await fetch(`${URL}/reviews`)
-    return await response.json()
-  }catch(err){
-    console.log("error on getAllReviews",err)
+const getAllReviews = async () => {
+  try {
+    const response = await fetch(`${URL}/reviews`);
+    return await response.json();
+  } catch (err) {
+    console.log("error on getAllReviews", err);
   }
-}
+};
 
 const createReview = async (aRev) => {
   try {
@@ -194,7 +189,7 @@ const createReview = async (aRev) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...aRev
+        ...aRev,
       }),
     });
     return await response.json();
@@ -234,7 +229,6 @@ const getAllEventsForUser = async (pId) => {
   }
 };
 
-
 const deleteEvent = async (pId) => {
   try {
     const response = await fetch(`${URL}/events/delete/${pId}`, {
@@ -246,14 +240,14 @@ const deleteEvent = async (pId) => {
   }
 };
 
-const getAllComments = async()=>{
+const getAllComments = async () => {
   try {
     const response = await fetch(`${URL}/comments`);
     return await response.json();
   } catch (error) {
     console.log("error on getAllComments", error);
   }
-}
+};
 
 const createComment = async (aComment) => {
   try {
@@ -261,7 +255,7 @@ const createComment = async (aComment) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...aComment
+        ...aComment,
       }),
     });
     return await response.json();
@@ -270,22 +264,35 @@ const createComment = async (aComment) => {
   }
 };
 
-const updatePlace = async(pId)=>{
-  try{
-  const response = await   fetch(`${URL}/places/${pId}`, {
-  method: 'PUT', /* or PATCH */
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-   
-  })
-})
-return await response.json();
+const updatePlace = async (aPlace) => {
+  try {
+    const response = await fetch(`${URL}/places/update/${aPlace.id}`, {
+      method: "PUT" /* or PATCH */,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aPlace,
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("Error on UpdatePlace", error);
   }
-  
-  catch(error){
-    console.log("Error on UpdatePlace",error )
+};
+
+const updateEvent = async (aEvent) => {
+  try {
+    const response = await fetch(`${URL}/events/update/${aEvent.id}`, {
+      method: "PUT" /* or PATCH */,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...aEvent,
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("Error on updateEvent", error);
   }
-}
+};
 
 export {
   addRegister,
@@ -308,5 +315,8 @@ export {
   deletePlace,
   deleteEvent,
   addComment,
-  updatePlace
+  updatePlace,
+  getAllReviews,
+  createReview,
+  updateEvent,
 };

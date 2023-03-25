@@ -8,7 +8,6 @@ import { BsFillBookmarkPlusFill, BsFillBookmarkDashFill } from "react-icons/bs";
 import { deleteFavorite, addFavorite, getAllComments } from "../../api";
 import { LoginContext } from "../../context/Login";
 import Comment from "../Comment/Comment";
-import EditPlace from "../EditPlaceuEvent/EditPlace";
 
 const PubLugar = ({
   place,
@@ -18,7 +17,10 @@ const PubLugar = ({
   getThePlaces,
   isOpenReview,
   setIsOpenReview,
-  chargeReviews
+  chargeReviews,
+  setEditPlace,
+  setIsOpenEditPlace,
+  isOpenEditPlace,
 }) => {
   const { logedUser } = useContext(LoginContext);
   const [theUser, setTheUser] = useState({});
@@ -154,34 +156,23 @@ const PubLugar = ({
                   <>
                     {logedUser.id == place.userId ? (
                       <>
-                        <li><button> 
-                          
-                          
-                           <label htmlFor="editar">
-                            Editar
-                           </label>
-                           
-                           </button></li>
+                        <li>
+                          <label
+                            htmlFor="editar"
+                            onClick={() => {
+                              setEditPlace(place);
+                              setIsOpenEditPlace(!isOpenEditPlace);
+                            }}
+                          >
+                            <button>Editar</button>
+                          </label>
+                        </li>
 
-                           <input type="checkbox" id="editar" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box relative max-w-screen-md border-2 border-info">
-          <label
-            htmlFor="editar"
-            className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
-          >
-            ✕
-          </label>
-         <EditPlace/>
-        </div>
-      </div>
-
-
-
-
-
-
-                        <li><button onClick={()=>deleteAPlace(place.id)}>Borrar</button></li>
+                        <li>
+                          <button onClick={() => deleteAPlace(place.id)}>
+                            Borrar
+                          </button>
+                        </li>
                       </>
                     ) : null}
                   </>
@@ -206,7 +197,14 @@ const PubLugar = ({
             }}
             htmlFor="my-modal-5"
           >
-            <img src={place.images[0].url} className="place-image" />
+            {place.images ? (
+              <img src={place.images[0].url} className="place-image" />
+            ) : (
+              <img
+                src={"https://via.placeholder.com/300"}
+                className="place-image"
+              />
+            )}
           </label>
         </div>
         <div className="place-footer">

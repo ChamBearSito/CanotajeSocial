@@ -5,7 +5,7 @@ import { createReview } from "../../api";
 import { LoginContext } from "../../context/Login";
 
 const Review = ({ chargeReviews, pOe, listReviews }) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
   const [review, setReview] = useState("");
 
   const {logedUser} = useContext(LoginContext)

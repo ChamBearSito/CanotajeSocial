@@ -7,6 +7,8 @@ import { SearchContext } from "../../context/SearchContext";
 import Comment from "../Comment/Comment";
 import { LoginContext } from "../../context/Login";
 import Review from "../Review/Review";
+import EditPlace from "../EditPlaceuEvent/EditPlace";
+import EditEvent from "../EditPlaceuEvent/EditEvent";
 
 const FeedPlaces = ({
   thePlaces,
@@ -16,15 +18,25 @@ const FeedPlaces = ({
   getThePlaces,
   getTheEvents,
 }) => {
+  //COMMENTS
   const [theComments, setTheComments] = useState([]);
   const [commentCharged, setCommentCharged] = useState([]);
   const [isOpenComment, setIsOpenComment] = useState(false);
-  const [currentComment, setCurrentComment]=useState();
+  const [currentComment, setCurrentComment] = useState();
 
-  const [isOpenReview,setIsOpenReview]=useState(false)
-  const [allReviews,setAllReviews]=useState([])
-  const [currentReview,setCurrentReview]=useState()
-  const [reviewsCharged,setReviewsCharged]=useState([])
+  //REVIEWS
+  const [isOpenReview, setIsOpenReview] = useState(false);
+  const [allReviews, setAllReviews] = useState([]);
+  const [currentReview, setCurrentReview] = useState();
+  const [reviewsCharged, setReviewsCharged] = useState([]);
+
+  //UPDATE
+  //PLACE
+  const [editPlace, setEditPlace] = useState();
+  const [isOpenEditPlace, setIsOpenEditPlace] = useState(false);
+  //EVENT
+  const [editEvent, setEditEvent] = useState();
+  const [isOpenEditEvent, setIsOpenEditEvent] = useState(false);
 
   const getAllTheComents = async () => {
     const response = await getAllComments();
@@ -32,35 +44,37 @@ const FeedPlaces = ({
     return response.data;
   };
 
-  const getAllTheReviews=async()=>{
+  const getAllTheReviews = async () => {
     const response = await getAllReviews();
-    setAllReviews(response.data)
-    return response.data
-  }
+    setAllReviews(response.data);
+    return response.data;
+  };
 
-  const chargeReviews=async(pId,pOe,chargeAll)=>{
+  const chargeReviews = async (pId, pOe, chargeAll) => {
     let arrayFilter = [];
-    let response=[...allReviews];
+    let response = [...allReviews];
     let option;
     if (chargeAll == true) {
-      response=await getAllTheReviews();
+      response = await getAllTheReviews();
     }
     response.map((aReview) => {
-      pOe=="place" && aReview.eventId==null?option=aReview.placeId:option=aReview.eventId;
+      pOe == "place" && aReview.eventId == null
+        ? (option = aReview.placeId)
+        : (option = aReview.eventId);
       if (option == pId) {
         arrayFilter.push(aReview);
       }
     });
     // seteamos el filtrerComent y lo cargamos con el array
-    setCurrentReview({id:pId,pOe:pOe});
+    setCurrentReview({ id: pId, pOe: pOe });
     setReviewsCharged(arrayFilter);
-  }
+  };
 
-  const chargeComments = async(eventId, chargeAll) => {
+  const chargeComments = async (eventId, chargeAll) => {
     let arrayFilter = [];
-    let response=[...theComments];
+    let response = [...theComments];
     if (chargeAll == true) {
-      response=await getAllTheComents();
+      response = await getAllTheComents();
     }
     response.map((aComment) => {
       if (aComment.eventId == eventId) {
@@ -101,7 +115,7 @@ const FeedPlaces = ({
     getAllTheComents()
       .then()
       .catch((err) => console.log(err));
-    getAllTheReviews()
+    getAllTheReviews();
   }, []);
 
   //cada vez que cambie e IsOpen se LLama al filtrador
@@ -137,6 +151,9 @@ const FeedPlaces = ({
               setIsOpenReview={setIsOpenReview}
               chargeReviews={chargeReviews}
               setIsOpen={setIsOpen}
+              setEditPlace={setEditPlace}
+              isOpenEditPlace={isOpenEditPlace}
+              setIsOpenEditPlace={setIsOpenEditPlace}
             />
           ))}
         </div>
@@ -144,11 +161,10 @@ const FeedPlaces = ({
       {/* si ThePlces Exite  y turnShowEvents es true entonces por cada evento muestre el evento */}
       {theEvents && turnShowEvents == true && (
         <div style={mystyle}>
-          {theEvents.map((aEvent) => 
-          (
+          {theEvents.map((aEvent) => (
             <>
               <Event
-                key={`${aEvent.id}e`}
+                key={aEvent.id + "8"}
                 theEvent={aEvent}
                 isOpenComment={isOpenComment}
                 setIsOpenComment={setIsOpenComment}
@@ -157,6 +173,9 @@ const FeedPlaces = ({
                 setIsOpenReview={setIsOpenReview}
                 getTheEvents={getTheEvents}
                 chargeReviews={chargeReviews}
+                setEditEvent={setEditEvent}
+                isOpenEditEvent={isOpenEditEvent}
+                setIsOpenEditEvent={setIsOpenEditEvent}
               />
             </>
           ))}
@@ -184,42 +203,79 @@ const FeedPlaces = ({
           </div>
         </>
       )}
-          <input type="checkbox" id="my-modal-5" className="modal-toggle" />
-          <div className="modal" style={{zIndex:10002}}>
-            <div className="modal-box relative w-fit border-2 border-info">
-              <label
-                htmlFor="my-modal-5"
-                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
-              >
-                ✕
-              </label>
-              <Comment
-                key={currentComment}
-                chargeComments={chargeComments}
-                eventId={currentComment}
-                listComments={commentCharged}
-              />
-            </div>
-          </div>
-        {isOpenReview && <>
+      <input type="checkbox" id="my-modal-5" className="modal-toggle" />
+      <div className="modal" style={{ zIndex: 10002 }}>
+        <div className="modal-box relative w-fit border-2 border-info">
+          <label
+            htmlFor="my-modal-5"
+            className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+          >
+            ✕
+          </label>
+          <Comment
+            key={currentComment}
+            chargeComments={chargeComments}
+            eventId={currentComment}
+            listComments={commentCharged}
+          />
+        </div>
+      </div>
+      {isOpenReview && (
+        <>
           <input type="checkbox" id="my-modal-6" className="modal-toggle" />
-          <div className="modal" style={{zIndex:10002}}>
+          <div className="modal" style={{ zIndex: 10002 }}>
             <div className="modal-box relative w-fit border-2 border-info">
               <label
                 htmlFor="my-modal-6"
                 className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
-                onClick={()=>setIsOpenReview(!isOpenReview)}
+                onClick={() => setIsOpenReview(!isOpenReview)}
               >
                 ✕
               </label>
-              <Review 
+              <Review
                 key={currentReview.id}
                 pOe={currentReview}
                 chargeReviews={chargeReviews}
-                listReviews={reviewsCharged}/>
+                listReviews={reviewsCharged}
+              />
             </div>
           </div>
-          </>}
+        </>
+      )}
+      {isOpenEditPlace && 
+        <>
+          <input type="checkbox" id="editar" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box relative max-w-screen-md border-2 border-info">
+              <label
+                htmlFor="editar"
+                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+                onClick={() => setIsOpenEditPlace(!isOpenEditPlace)}
+              >
+                ✕
+              </label>
+              <EditPlace thePlace={editPlace} getThePlaces={getThePlaces}/>
+            </div>
+          </div>
+        </>
+      }
+      {isOpenEditEvent && 
+        <>
+          <input type="checkbox" id="editarEvent" className="modal-toggle" />
+          <div className="modal" style={{zIndex:10002}}>
+            <div className="modal-box relative max-w-screen-md border-2 border-info">
+              <label
+                htmlFor="editarEvent"
+                className="btn btn-sm btn-circle absolute right-2 top-2 input-info"
+                onClick={() => setIsOpenEditEvent(!isOpenEditEvent)}
+              >
+                ✕
+              </label>
+              <EditEvent theEvent={editEvent} setIsOpenEditEvent={setIsOpenEditEvent} isOpenEditEvent={isOpenEditEvent} thePlaces={thePlaces} getTheEvents={getTheEvents}/>
+            </div>
+          </div>
+        </>
+      }
     </div>
   );
 };
