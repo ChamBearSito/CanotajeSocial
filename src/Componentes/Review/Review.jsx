@@ -5,11 +5,13 @@ import { createReview } from "../../api";
 import { LoginContext } from "../../context/Login";
 
 const Review = ({ chargeReviews, pOe, listReviews }) => {
+  //contenedor de las review, tanto la lista como el metodo creador
   const [rating, setRating] = useState(5);
   const [review, setReview] = useState("");
 
   const {logedUser} = useContext(LoginContext)
 
+  //metodo para agregar una review
   const handleSubmit = async (e) => {
     e.preventDefault();
     try{
@@ -19,6 +21,8 @@ const Review = ({ chargeReviews, pOe, listReviews }) => {
         rating:rating
       }
       let myReviewActualized;
+      //pOe es un parametro que trae la id y si es un evento o una place
+      //para saber donde cargar la review
       pOe.pOe=='place'? 
       myReviewActualized={...myReview,placeId:pOe.id}
       :myReviewActualized={...myReview,eventId:pOe.id}

@@ -1,6 +1,8 @@
 import React from "react";
 
 const DetailEvent = ({aEvent, isOpen}) => {
+  //Detail event es para mostrar un modal con los datos
+  // de un evento seleccionado
   return (
     <>
       {isOpen && (

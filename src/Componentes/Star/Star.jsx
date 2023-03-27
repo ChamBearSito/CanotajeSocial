@@ -2,7 +2,8 @@ import React from "react";
 import { AiFillStar } from "react-icons/ai";
 
 const Star = ({ setRating }) => {
-
+  //Componente complemento a Review para que devuelva el valor
+  //del rating de la misma, estrellitas literalmente
   const onOffStars = (value) => {
     const theStars = document.getElementsByClassName("ratingForReview");
 

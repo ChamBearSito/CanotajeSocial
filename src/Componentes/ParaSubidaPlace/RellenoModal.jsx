@@ -3,13 +3,19 @@ import { useParams } from "react-router-dom";
 import { createPlace } from "../../api";
 import { LoginContext } from "../../context/Login";
 
-
-
 const RellenoModal = ({thePlaces, setThePlaces}) => {
+  //Este es el relleno del modal de subida de places
   const [selected, setSelected] = useState("");
+  //selected era solo para controlar lo que seleccionaba
+  // el dropdown de watertype
   const { logedUser } = useContext(LoginContext);
+  //traemos logedUser del contexto
   const [fileImage,setFileImage]=useState();
+  //una variable para guardar el file seleccionado
+  //en el input file
 
+  //definimos place predefinida para ocupar datos que van a estar
+  //aunque este no se cree
   const [place, setPlace] = useState({
     userId: logedUser.id,
     name: "",
@@ -19,8 +25,11 @@ const RellenoModal = ({thePlaces, setThePlaces}) => {
     waterType: "",
   });
 
+  //metodo para guardar imagenes con la api de clodinary
   const CLOUD_NAME = "ddk8ydo51";
+  //nombre de la nube que te dan en la api
   const UPLOAD_PRESET = "u2skitgq";
+  //el codigo de acceso para subir archivos 
 
   const upload = async (place) => {
     const data2 = new FormData();
@@ -35,16 +44,19 @@ const RellenoModal = ({thePlaces, setThePlaces}) => {
     addPlace(placeActualized)
   };
   
-  // const placeIds = events.map((event)=>event.id);
+  // metodo para agregar un place
   const addPlace = async (pPlace) => {
     const response = await createPlace(pPlace);
     if(response.status==201){
       const placesActualized=[response.data,...thePlaces]
+      //esto es para que se actualize en tiempo real
       setThePlaces(placesActualized);
       alert('Se agrego!')
     }else{
       alert('Hubo un error!')
     }
+    //esto es para devolver los datos a vacios y no queden
+    //guardados en el modal
     setPlace({
       userId: logedUser.id,
       name: "",
@@ -55,6 +67,7 @@ const RellenoModal = ({thePlaces, setThePlaces}) => {
     })
   };
 
+  //cuando se submitea llama a la funcion upload
   const handleAddPlace = (e) => {
     e.preventDefault();
     upload(place);
@@ -65,6 +78,7 @@ const RellenoModal = ({thePlaces, setThePlaces}) => {
     setSelected(event.target.value);
   };
 
+  //metodo para cambiar los valores de la place a crear
   const onAddPlace = (e) => {
     e.preventDefault();
     if (e.target.id == "waterType") handleChange(e);

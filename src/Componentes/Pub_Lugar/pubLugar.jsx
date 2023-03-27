@@ -26,13 +26,16 @@ const PubLugar = ({
   const [theUser, setTheUser] = useState({});
   const [isOpenComment, setIsOpenComment] = useState(false);
 
+  //varibale para mostrar si esta guardada o no el place
   const [savedFav, setSavedFav] = useState({
     status: false,
     favId: "",
   });
 
+  //para cargar los favoritos en la primer carga
   const { favoritesUser } = useContext(LoginContext);
 
+  //metodo para eliminar de favoritos
   const deleteOfFavorites = async () => {
     try {
       const response = await deleteFavorite(savedFav.favId);
@@ -47,6 +50,7 @@ const PubLugar = ({
     }
   };
 
+  //metodo para cargar si es favorito
   const checkIsFavorite = async () => {
     favoritesUser.map((aFav) => {
       if (aFav.placeId == place.id) {
@@ -58,6 +62,7 @@ const PubLugar = ({
     });
   };
 
+  //metodo para guardar un favorito
   const saveFavorite = async () => {
     try {
       const favorite = {
@@ -77,6 +82,7 @@ const PubLugar = ({
     }
   };
 
+  //metodo para eliminar una place
   const deleteAPlace = async (pId) => {
     let respuest = window.confirm("Esta seguro de borrar?");
     if (respuest) {

@@ -7,11 +7,13 @@ import "./DetailPlaces.css";
 const DetailsPlaces = ({ place, isOpen, events }) => {
   const [modalEvent, setModalEvent] = useState({});
   const [isOpenEvent, setIsOpenEvent] = useState(false);
-
+//Detail places muestra un modal con el contenido del place seleccionado
+// y ademas muestra los eventos que tiene
   const changeModalEvent=(aEvent)=>{
     setModalEvent(aEvent);
     setIsOpenEvent(!isOpenEvent);
   }
+  
 
   return (
     <>

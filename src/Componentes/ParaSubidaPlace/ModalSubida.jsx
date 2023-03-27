@@ -4,6 +4,8 @@ import RellenoModalEvento from "../ParaSubirEvento/RellenoModalEvento";
 import RellenoModal from "./RellenoModal";
 
 const ModalSubida = () => {
+  //un modal que se rellena segun que se haga
+  // si es para crear un evento o si es para crear un place
   return (
     <>
       <button className="btn-success mx-auto">

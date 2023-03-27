@@ -20,30 +20,38 @@ import DetailsPlaces from "../ParaDetailplace/DetailsPlaces";
 import { getAPlace, getAEvent, getAllEvents } from "../../api";
 
 const Perfil = (props) => {
+  //para abrir modal de evento en el perfil
   const [modalEvent, setModalEvent] = useState({});
   const [isOpenEvent, setIsOpenEvent] = useState(false);
 
+  //para mostrar los favoritos del userloged
   const { getFavoritesXUser } = useContext(LoginContext);
   const { favoritesUser } = useContext(LoginContext);
 
+  //para encontrar datos del usuario y los places,eventos que creo
   const [theUser, setTheUser] = useState({});
   const [thePlaces, setThePlaces] = useState([]);
   const [theEvents, setTheEvents] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
 
+  //para mostrar modal place en el perfil
   const [modalPlace, setModalPlace] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
+  //datos para encontrar al usuario del perfil
   const { pId } = useParams();
   const { image, setImage } = useContext(ImageContext);
   const { logedUser, users } = useContext(LoginContext);
 
+  //variable para mostrar datos del perfil
+  //places, eventos y favoritos
   const [thePage, setThePage] = useState({
     pageActually: "pagePlace",
   });
 
+  //filtrar eventos que pertenecen al place abierto en modal
   const [filterEvents, setFilterEvents] = useState([]);
-
+  //metodo para filtrar los eventos
   const filterEventsArray = () => {
     let eventFilterArray = [];
     allEvents.map((aEvent) => {
@@ -62,14 +70,18 @@ const Perfil = (props) => {
     const response = await getAllEvents();
     setAllEvents(response.data);
   };
-
+  //variable para guardar los favoritos
   const [savePubs, setSavePubs] = useState([]);
 
+  //metodo para cambiar lo que se muestra en el perfil
   const onChangePage = (e) => {
     const value = e.target.value;
     setThePage({ pageActually: value });
   };
 
+  //buscar los favoritos del usuario 
+  //igualmente aca funciona con solo logedUser ya que
+  //no se deberia poder buscar los favoritos de otra cuenta
   const chargeFavorites = async () => {
     await getFavoritesXUser(logedUser ? logedUser.id : pId);
     if (favoritesUser) {
@@ -126,11 +138,14 @@ const Perfil = (props) => {
       .catch((err) => console.log(err));
   }, []);
 
+  //cerrar modal
   const closeModal = () => {
     document.getElementById("my-modal-3").checked = false;
     turnScrollIn();
   };
 
+  //metodo para que no scrolle en el modal de
+  //ajustes del perfil
   const turnScrollIn = () => {
     const theModal = document.getElementById("my-modal-3");
     if (theModal.checked == true) {

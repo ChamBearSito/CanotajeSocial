@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {getAUser} from '../../api'
 
 const TrueComment = ({aComment}) => {
+  //Componente para mostrar comentarios 
   const [commentUser, setCommentUser]=useState({
     name:'The',
     lastName:'Anonimous'

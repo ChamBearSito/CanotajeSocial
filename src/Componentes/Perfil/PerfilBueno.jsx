@@ -3,6 +3,7 @@ import { ImageProvider } from '../../context/Estadofoto'
 import Perfil from './Perfil'
 
 const PerfilBueno = () => {
+  //layout de perfil
   return (
    <ImageProvider>
 

@@ -4,6 +4,8 @@ import { getAllPlaces } from "../../api";
 import { LoginContext } from "../../context/Login";
 
 const RellenoModalEvento = ({setTheEvents,theEvents}) => {
+  //useEffect para cargar todas las places en el input select
+  //para que se pueda poner el evento
   useEffect(() => {
     const fetchPlaces = async () => {
       const response = await getAllPlaces();
@@ -26,15 +28,18 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
     date: "2023-05-27",
   });
 
+  //metodo para agregar evento
   const addEvent = async (pEvent) => {
     const response = await createEvent(pEvent);
     if(response.status==201){
       const EventsResfresh=[response.data,...theEvents]
+      //sirve para actualizar en tiempo real
       setTheEvents(EventsResfresh);
       alert("Is susscesfully!");
     }else{
       alert('Hubo un error!')
     }
+    //deja datos vacios para que no queden en el modal
     setEvent({
       userId:logedUser.id,
       placeId: 0,
@@ -50,6 +55,7 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
     upload(event)
   };
 
+  //cambiar valores del evento a crear
   const onAddEvent = (e) => {
     e.preventDefault();
     const value = e.target.value;
@@ -57,6 +63,7 @@ const RellenoModalEvento = ({setTheEvents,theEvents}) => {
     setEvent({ ...event, [element]: value });
   };
 
+  //mismo que el relleno modal de place
   const CLOUD_NAME = "ddk8ydo51";
   const UPLOAD_PRESET = "u2skitgq";
 

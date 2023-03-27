@@ -3,6 +3,8 @@ import "../Pub_Review/pubReview.css";
 import { getAUser, getAPlace, getAEvent } from "../../api";
 
 const PubReview = ({onChargeReviews,aReview}) => {
+  //componente para mostrar una review, no funciona las estrellas
+  //no se porque pero se dejo comentado
   const [dataXComment, setDataXComment] = useState({
     name:'The',
     lastName:'Anonimous'
