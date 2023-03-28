@@ -6,14 +6,16 @@ import { ImageContext } from '../../context/Estadofoto'
 import { LoginContext } from '../../context/Login'
 import Search from '../Search/Search'
 
-import { getAllEvents } from '../../api'
+
 
 const Header = () => {
+  //Traemos el logedUsed de su Contexto,si el id de logedUser es distinto a null loged es true
   const { logedUser } = useContext(LoginContext)
   let loged=false;
   if(logedUser.id!=null){
     loged=true;
   }
+  //Traemos el setLogedUser y Image de su contexto
   const { setLogedUser } = useContext(LoginContext)
   const { image } = useContext(ImageContext);
 

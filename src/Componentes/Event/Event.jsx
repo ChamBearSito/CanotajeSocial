@@ -15,7 +15,7 @@ import { BsFillArrowDownCircleFill } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
 import { LoginContext } from "../../context/Login";
 
-//Traemos el TheEvent
+//Traemos lo que Necesitamos
 const Event = ({
   theEvent,
   setIsOpenComment,

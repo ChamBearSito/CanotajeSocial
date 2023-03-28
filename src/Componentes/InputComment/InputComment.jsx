@@ -1,10 +1,11 @@
 import React,{useState,useContext} from 'react'
 import { LoginContext } from '../../context/Login';
-
+//Recibimos El eventId y onSubmit
 const InputComment = ({onSubmit, eventId}) => {
+  //traemos el logedUser y creamos un estado para el comentario
   const {logedUser}=useContext(LoginContext);
   const [comment, setComment] = useState("");
-
+  //subida de form,se crea addComentary el cual tiene el UserId,eventId y el comentario. llamamos al OnSubmit y le mandamos el addComentary
   const handleSubmit=(e)=>{
     e.preventDefault();
     const addCommentary={

@@ -1,10 +1,12 @@
 import React,{useState} from "react";
 import { updateEvent } from "../../api";
-
+//Recibimos Lo que Necesitamos
 const EditEvent = ({ thePlaces,theEvent, getTheEvents,setIsOpenEditEvent,isOpenEditEvent }) => {
 
+  //Creamos un estado para editar los eventos, el cual contiene los eventos
   const [editEvent, setEditEvent] = useState({ ...theEvent });
 
+  //subida de form, se llama a la api y si el status del response == 200 llamamos al getTheEvents
   const handleSubmit = async(e) => {
     e.preventDefault();
     try{

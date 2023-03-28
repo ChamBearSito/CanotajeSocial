@@ -8,14 +8,18 @@ import { addRegister, getLogin, deleteFavorite } from "../../api";
 
 const Login = () => {
 
+  // Traemos el UseNavigate de react-router-dom
   const navigate=useNavigate();
-
+// traemos el addLogin de el LoginContext
   const {addLogin}=useContext(LoginContext);
-
+// traemos el getFavoritesXUser y setLogedUser de el LoginContext
   const {getFavoritesXUser,setLogedUser}=useContext(LoginContext);
+  // traemos el register de el LoginContext
   const {register}=useContext(LoginContext);
+    // traemos el turnRegister de el LoginConte
   const {turnRegister}=useContext(LoginContext);
   
+  //Definimos un estado User con sus correspondientes datos
   const [theUser, setTheUser]=useState({
     name:'',
     lastName:'',
@@ -25,31 +29,35 @@ const Login = () => {
 
   })
 
+  //si la key es igaul a enter, el turnRegistrer(!registrer)
   const handleKeyPress=(event)=> {
     if(event.key === 'Enter') {
       turnRegister(!register)
     }
   };
-
+// HandleChange de form
   const handleChange=(e)=>{
     const value = e.target.value;
     const element = e.target.id;
     setTheUser({...theUser, [element]:value});
   };
-
+//Subida de Form
   const handleSubmit = (event) => {
     event.preventDefault()
     // llamar al metodo agregar empleado del contexto
-
+    //si existe registro llamamos al addRegistrer y le enviamos a theUser.
     if(register){
       const achieveTheRegister=async()=>{
         await addRegister(theUser);
       }
       achieveTheRegister().then().catch((err)=>console.log(err))
     }
+
+    //sino llamamos al getLogin() y le enviamos el theUser,
     else{
       const loginUser=async()=>{ 
         const response = await getLogin(theUser)
+        //si existe el user en la data de la respuesta, seteamos el LogedUser,el getFavoritesXUSer, y finalmente navegamos a la pagina Principal
         if(response.data.user){
           setLogedUser(response.data.user);
           getFavoritesXUser(response.data.user.id);

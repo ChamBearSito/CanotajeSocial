@@ -3,13 +3,17 @@ import Walter from "../../assets/img/walter.png"
 import { ImageContext } from '../../context/Estadofoto';
 import { useNavigate } from 'react-router-dom';
 import { LoginContext } from '../../context/Login';
-
+//Recibimos el closeModal
 const InfoUsuario = ({closeModal}) => {
+
+  //traemos el Contexto del logincontext y de ImageContext
   const {updateUsers} = useContext(LoginContext)
   const {logedUser,setLogedUser}=useContext(LoginContext);
-  const [updateUser,setUpdateUser]=useState({...logedUser});
   const { image, setImage } = useContext(ImageContext);
+  // cremaos estado del updateUser y le cargamos el logedUser
+  const [updateUser,setUpdateUser]=useState({...logedUser});
 
+  //Para SUbida de Imagen
   function handleFileSelect(event) {
     const file = event.target.files[0];
 
@@ -23,7 +27,7 @@ const InfoUsuario = ({closeModal}) => {
       reader.readAsDataURL(file);
     }
   }
-
+//Para Onchange y asignacion de valores a los elementos del form
   const handleInputChange = (e) => {
     console.log(updateUser)
     const value = e.target.value;
@@ -31,6 +35,8 @@ const InfoUsuario = ({closeModal}) => {
     setUpdateUser({ ...updateUser, [element]: value })
   }
 
+
+  //subida de Form
   const handleSubmit = async (e) => {
 
     e.preventDefault();

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { updatePlace } from "../../api";
-
+//Necesitamos thePlace y el getThePlaces de la api
 const EditPlace = ({ thePlace, getThePlaces }) => {
+  //creamos estado el cual le cargamos theplace
   const [editPlace, setEditPlace] = useState({ ...thePlace });
 
+  //subida de form, se llama a la api y si el status del response == 200 llamamos al getThePlaces
   const handleSubmit = async(e) => {
     e.preventDefault();
     try{

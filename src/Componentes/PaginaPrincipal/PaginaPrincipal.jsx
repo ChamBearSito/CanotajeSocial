@@ -14,10 +14,13 @@ import RellenoModalEvento from "../ParaSubirEvento/RellenoModalEvento";
 import { getAllEvents, getAllPlaces } from "../../api";
 
 const PaginaPrincipal = () => {
+  // Traemos getFavoritesXUser y logedUser de LoginContext
   const { getFavoritesXUser } = useContext(LoginContext);
   const { logedUser } = useContext(LoginContext);
+  //Creamos estados para los places y events inicializandolos como Array 
   const [thePlaces, setThePlaces] = useState([]);
   const [theEvents, setTheEvents] = useState([]);
+  //estado Para ShowEvents siendo false
   const [showEvents, setShowEvents] = useState(false);
 
   //Seteamos los estados inicializados como array para mandarle todos los places y events

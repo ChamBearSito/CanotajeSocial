@@ -4,11 +4,12 @@ import { ImageContext } from '../../context/Estadofoto';
 
 const InfoEditarUsuario = () => {
 
+  //En una primera Instancia se habia utilizado el localstorage, posteriormente se cambio al useState
     const laInfo= JSON.parse(localStorage.getItem("info"));
     const NombreU = laInfo.nombre;
     const ApellidoU = laInfo.apellido;
     const descripcionU = laInfo.description;
-
+  //Traemos la imagen del contexto que vamos a utilizar en varios lugares
     const { image, setImage } = useContext(ImageContext);
 
             function handleFileSelect(event) {
@@ -24,7 +25,7 @@ const InfoEditarUsuario = () => {
                 reader.readAsDataURL(file);
               }
             }
-
+//El Estado para info del perfil
         const [Info, setInfo] = useState({
             nombre: "",
             apellido:"",
@@ -34,7 +35,7 @@ const InfoEditarUsuario = () => {
         })
 
        
-
+//asignacion de valor de los campos al OnChange 
             const handleInputChange = (e) => {
 
                 const value = e.target.value;
@@ -42,6 +43,8 @@ const InfoEditarUsuario = () => {
                 setInfo({...Info,[element]: value})
             }
 
+
+            //Subida de Form
             const handleSubmit =  (e) =>{
 
                  e.preventDefault()
